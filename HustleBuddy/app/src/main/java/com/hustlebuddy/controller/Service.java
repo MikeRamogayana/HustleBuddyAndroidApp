@@ -15,6 +15,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.hustlebuddy.model.DailyExpense;
 import com.hustlebuddy.model.DailyStock;
+import com.hustlebuddy.model.EmailMessage;
 import com.hustlebuddy.model.Order;
 import com.hustlebuddy.model.OrderedProduct;
 import com.hustlebuddy.model.Product;
@@ -137,9 +138,23 @@ public class Service {
         DataComSingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 
+    //------Send Email-------//
+    public void SendEmail(EmailMessage emailMessage, VolleyResponseListener volleyResponseListener) {
+        String url = baseUrl + "email/send";
+        try {
+            StringPostRequest(url, EmailMessage.toJSONObject(emailMessage), volleyResponseListener);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     //------Vendor Account Management-------//
+    public interface VendorResponseListener {
+        void onResponse(Vendor vendor);
+        void onError(String message);
+    }
     // Logging In
-    public void Login(String email,String password,final VolleyResponseListener volleyListener) {
+    public void Login(String email,String password, VendorResponseListener vendorListener) {
 
         String url = vendorUrl + "login/" + email + "/" + password;
 
@@ -148,47 +163,7 @@ public class Service {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
-                            int vendorId = response.getInt("vendorId");
-                            volleyListener.onResponse(vendorId);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        volleyListener.onError("Could not login, error occurred!");
-                    }
-                });
-        DataComSingleton.getInstance(context).addToRequestQueue(request);
-    }
-    // Register Account
-    public void Register(Vendor vendor, final VolleyResponseListener volleyListener) {
-
-        String url = vendorUrl + "create";
-
-        //creating request body
-        try {
-            StringPostRequest(url, Vendor.toJSONObject(vendor), volleyListener);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Get Vendor By VendorId
-    public void GetVendor(int vendorId, final VolleyResponseListener volleyListener) {
-
-        String url = vendorUrl + "/get/vendorId/" + vendorId;
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
-                    int id = 0;
-                    @Override
-                    public void onResponse(JSONObject response) {
-
-                        try {
-                            id = response.getInt("vendorId");
-                            volleyListener.onResponse(id);
+                            vendorListener.onResponse(new Vendor(response));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -197,11 +172,90 @@ public class Service {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        volleyListener.onError("An error occurred!");
+                        vendorListener.onError("Could not login, error occurred!");
+                    }
+                });
+        DataComSingleton.getInstance(context).addToRequestQueue(request);
+    }
+    // Register Account
+    public void Register(Vendor vendor, VolleyResponseListener volleyListener) {
+
+        String url = vendorUrl + "create";
+        try {
+            StringPostRequest(url, Vendor.toJSONObject(vendor), volleyListener);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Get Vendor By VendorId
+    public void GetVendor(int vendorId, VendorResponseListener responseListener) {
+
+        String url = vendorUrl + "get/vendorId/" + vendorId;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+                            responseListener.onResponse(new Vendor(response));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        responseListener.onError("An error occurred!");
                     }
                 });
         DataComSingleton.getInstance(context).addToRequestQueue(request);
 
+    }
+
+    // Get Vendor By Email
+    public void GetVendorByEmail(String email, VendorResponseListener responseListener) {
+
+        String url = vendorUrl + "get/email/" + email;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+
+                        try {
+                            responseListener.onResponse(new Vendor(response));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        responseListener.onError("An error occurred!");
+                    }
+                });
+        DataComSingleton.getInstance(context).addToRequestQueue(request);
+
+    }
+    // Reset Password
+    public void ResetPassword(int vendorId, String email, String password, VolleyResponseListener responseListener) {
+        String url = vendorUrl + "reset/" + vendorId + "/" + email + "/" + password;
+        StringRequest request = new StringRequest(Request.Method.PUT, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        responseListener.onResponse(response);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        responseListener.onError(error.getMessage());
+                    }
+                });
+        DataComSingleton.getInstance(context).addToRequestQueue(request);
     }
 
     //------Stock Management------//
@@ -222,6 +276,11 @@ public class Service {
 
     public interface DailyExpenseListener{
         void onResponse(DailyExpense dailyExpense);
+        void onError(String message);
+    }
+
+    public interface  DailyStocksListener {
+        void onResponse(ArrayList<DailyStock> dailyStocks);
         void onError(String message);
     }
 
@@ -324,6 +383,34 @@ public class Service {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         dailyStockListener.onError("An error occurred!");
+                    }
+                });
+        DataComSingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+    // Get Monthly Expenses
+    public void GetMonthlyStocks(int vendorId, DailyStocksListener stocksListener) {
+        String url = baseUrl + "daily/get/date2/" + vendorId + "/" + LocalDateTime.now().minusMonths(1) + "/" + LocalDateTime.now();
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.e("Stocks", response.toString());
+                        ArrayList<DailyStock> dailyStocks = new ArrayList<>();
+                        for (int i = 0; i < response.length(); i++) {
+                            try {
+                                dailyStocks.add(new DailyStock(response.getJSONObject(i)));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        stocksListener.onResponse(dailyStocks);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        stocksListener.onError(error.getMessage());
                     }
                 });
         DataComSingleton.getInstance(context).addToRequestQueue(request);

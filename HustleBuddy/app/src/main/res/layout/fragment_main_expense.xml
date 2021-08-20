@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/expense_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btn_expenseRefresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:clickable="true"
+            app:backgroundTint="#C5CAE9"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:maxImageSize="42dp"
+            app:srcCompat="@drawable/ic_baseline_refresh_24" />
+
+        <TableRow
+            android:id="@+id/tableRow3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/textView88"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="Lunch"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView31"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text=" R "
+                android:textAlignment="textEnd"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/txt_expenseLunch"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:hint="Lunch"
+                android:inputType="number|numberDecimal"
+                android:textAlignment="textEnd" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tableRow3">
+
+            <TextView
+                android:id="@+id/textView89"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="Transport"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView30"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text=" R "
+                android:textAlignment="textEnd"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/txt_expenseTransport"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:hint="Transport"
+                android:inputType="number|numberDecimal"
+                android:textAlignment="textEnd" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tableRow2">
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="Other"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/textView28"
+                android:layout_width="140dp"
+                android:layout_height="wrap_content"
+                android:text=" R "
+                android:textAlignment="textEnd"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/txt_expenseOther"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:hint="Other"
+                android:inputType="number|numberDecimal"
+                android:textAlignment="textEnd" />
+        </TableRow>
+
+        <Button
+            android:id="@+id/btn_expenseUpdate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="Update Expenses"
+            android:textSize="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tableRow4" />
+
+        <TextView
+            android:id="@+id/textView20"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="Mothly Expenses"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_expenseUpdate" />
+
+        <TableRow
+            android:id="@+id/tableRow5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView20">
+
+            <TextView
+                android:id="@+id/textView24"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="Lunch"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView25"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="Transport"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="Other"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_Expense"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tableRow5" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>

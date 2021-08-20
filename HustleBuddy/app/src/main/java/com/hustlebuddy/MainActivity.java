@@ -1,6 +1,5 @@
 package com.hustlebuddy;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -8,30 +7,15 @@ import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.hustlebuddy.adapter.FragmentTabAdapter;
 import com.hustlebuddy.controller.Service;
-import com.hustlebuddy.model.DailyStock;
-import com.hustlebuddy.model.Product;
-import com.hustlebuddy.model.Sale;
-import com.hustlebuddy.model.TradingStock;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,11 +25,15 @@ public class MainActivity extends AppCompatActivity {
     OrderFragment orderFragment;
     ExpenseFragment expenseFragment;
 
+    ImageView imageView;
     TabLayout tabLayout;
     ViewPager viewPager;
     TextView textTitle;
 
-    int vendorId = 1;
+    Intent intent;
+
+    int vendorId;
+    String title;
 
     Service service;
 
@@ -54,17 +42,24 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = getIntent();
+        intent = getIntent();
+        vendorId = intent.getIntExtra("vendorId", 0);
 
         service = new Service(this);
 
+        imageView = findViewById(R.id.img_mainAccount);
         tabLayout = findViewById(R.id.tabs);
         viewPager = findViewById(R.id.view_pager);
         textTitle = findViewById(R.id.title);
 
-        if(intent.getIntExtra("fragment", -1) == 2) {
-            viewPager.setCurrentItem(2, true);
-        }
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, AccountActivity.class);
+                intent.putExtra("vendorId", vendorId);
+                startActivity(intent);
+            }
+        });
 
         setupViewPager();
 
@@ -75,18 +70,24 @@ public class MainActivity extends AppCompatActivity {
         adapter = new FragmentTabAdapter(getSupportFragmentManager());
 
         saleFragment = new SaleFragment(this, vendorId);
-        orderFragment = new OrderFragment(this, vendorId, saleFragment);
+        orderFragment = new OrderFragment(this, vendorId);
         expenseFragment = new ExpenseFragment(this, vendorId);
 
-        adapter.addFragment(saleFragment, "Sales");
         adapter.addFragment(orderFragment, "Orders");
+        adapter.addFragment(saleFragment, "Sales");
         adapter.addFragment(expenseFragment, "Expenses");
 
         viewPager.setAdapter(adapter);
+        if(intent.getIntExtra("fragment", -1) == 0) {
+            viewPager.setCurrentItem(0, true);
+        } else {
+            viewPager.setCurrentItem(1, true);
+        }
         tabLayout.setupWithViewPager(viewPager);
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_baseline_point_of_sale_24);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_baseline_access_alarm_24);
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_baseline_attach_money_24);
+
     }
 }

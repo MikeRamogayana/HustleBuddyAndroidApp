@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -45,9 +46,6 @@ public class AddOrderActivity extends AppCompatActivity {
     Service service;
 
     RecyclerView recyclerView;
-    LayoutInflater popupInflator;
-    View addView;
-    PopupWindow addPopup;
 
     ArrayAdapter<String> productsAdapter;
     SaleProductAdapter saleProductAdapter;
@@ -61,9 +59,9 @@ public class AddOrderActivity extends AppCompatActivity {
     ImageView img_orderDate;
     ImageView img_orderTime;
     TextView txt_orderDescription;
+    LinearLayout layout;
     Spinner spinnerAddProduct;
     TextView txt_orderQuantity;
-    TextView txt_orderUnitPrice;
     TextView txt_orderSubTotal;
     Button btnBack;
     Button btnDone;
@@ -71,7 +69,6 @@ public class AddOrderActivity extends AppCompatActivity {
     Button btnAddOrderProduct;
 
     int dateYear, dateMonth, dateDay, timeHour, timeMinute;
-    String customerName, contactNumber, location, description;
 
     List<Product> productList = new ArrayList<>();
     List<String> productNameList = new ArrayList<>();
@@ -104,16 +101,12 @@ public class AddOrderActivity extends AppCompatActivity {
         btnAddOrderProduct = findViewById(R.id.btn_add_orderAddProduct);
         btnAddOrder = findViewById(R.id.btn_orderAdd);
 
-        popupInflator = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-        addView = popupInflator.inflate(R.layout.layout_popup_add_orderedproduct, null);
-        addPopup = new PopupWindow(addView, RecyclerView.LayoutParams.WRAP_CONTENT, RecyclerView.LayoutParams.WRAP_CONTENT, true);
-
-        btnBack = addView.findViewById(R.id.btn_order_addBack);
-        btnDone = addView.findViewById(R.id.btn_order_addDoneOrderedProduct);
-        txt_orderQuantity = addView.findViewById(R.id.txt_add_orderQuantity);
-        txt_orderSubTotal = addView.findViewById(R.id.txt_add_orderSubTotal);
-        txt_orderUnitPrice = addView.findViewById(R.id.txt_add_orderPerUnit);
-        spinnerAddProduct = addView.findViewById(R.id.spinner_add_orderOrderedProductName);
+        layout = findViewById(R.id.linear_addProduct);
+        btnBack = findViewById(R.id.btn_order_addBack);
+        btnDone = findViewById(R.id.btn_order_addDoneOrderedProduct);
+        txt_orderQuantity = findViewById(R.id.txt_add_orderQuantity);
+        txt_orderSubTotal = findViewById(R.id.txt_add_orderSubTotal);
+        spinnerAddProduct = findViewById(R.id.spinner_add_orderOrderedProductName);
 
         recyclerView = findViewById(R.id.recycler_add_orderOrderedProducts);
         linearLayoutManager = new LinearLayoutManager(this);
@@ -125,7 +118,6 @@ public class AddOrderActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 product = productList.get(position);
-                txt_orderUnitPrice.setText("Per Unit          R " + decimalFormat.format(productList.get(position).getSellingPrice()));
             }
 
             @Override
@@ -198,8 +190,14 @@ public class AddOrderActivity extends AppCompatActivity {
                                     txt_orderTime.setText("00:00");
                                 } else if(minute == 0){
                                     txt_orderTime.setText(hourOfDay + ":00");
-                                } else  if(hourOfDay == 0){
+                                } else  if(hourOfDay == 0) {
                                     txt_orderTime.setText("00" + minute);
+                                }else if(minute < 10 && hourOfDay < 10){
+                                    txt_orderTime.setText("0" + hourOfDay + ":0" + minute);
+                                } else if(minute < 10){
+                                    txt_orderTime.setText(hourOfDay + ":0" + minute);
+                                } else  if(hourOfDay < 10){
+                                    txt_orderTime.setText("0" + hourOfDay + ":" + minute);
                                 } else {
                                     txt_orderTime.setText(hourOfDay + ":" + minute);
                                 }
@@ -216,14 +214,14 @@ public class AddOrderActivity extends AppCompatActivity {
         btnAddOrderProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addPopup.showAtLocation(v.getRootView(), Gravity.CENTER, 0, 0);
+                layout.setVisibility(View.VISIBLE);
             }
         });
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addPopup.dismiss();
+                layout.setVisibility(View.GONE);
             }
         });
 
@@ -234,7 +232,7 @@ public class AddOrderActivity extends AppCompatActivity {
                     saleProductAdapter.getProductList().add(product);
                     saleProductAdapter.getQuantityList().add(Integer.parseInt(txt_orderQuantity.getText().toString()));
                     saleProductAdapter.notifyDataSetChanged();
-                    addPopup.dismiss();
+                    layout.setVisibility(View.GONE);
                     Toast.makeText(AddOrderActivity.this, "Product added...", Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     Toast.makeText(AddOrderActivity.this, "Could not add product!!!", Toast.LENGTH_SHORT).show();
@@ -249,7 +247,7 @@ public class AddOrderActivity extends AppCompatActivity {
                 try {
                     Order order = new Order(0, vendorId, txt_orderCustomerName.getText().toString(),
                             txt_orderContactNumber.getText().toString(), txt_orderLocation.getText().toString(),
-                            "pending", LocalDateTime.now(), LocalDateTime.parse(txt_orderDate + " " + txt_orderTime,
+                            "pending", LocalDateTime.now(), LocalDateTime.parse(txt_orderDate.getText().toString() + " " + txt_orderTime.getText().toString(),
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), txt_orderDescription.getText().toString());
                     service.CreateOrder(order, new Service.VolleyResponseListener() {
                         @Override
@@ -282,6 +280,7 @@ public class AddOrderActivity extends AppCompatActivity {
                                             Toast.makeText(AddOrderActivity.this, "Order created successfully...", Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(AddOrderActivity.this, MainActivity.class);
                                             intent.putExtra("vendorId", vendorId);
+                                            intent.putExtra("fragment", 0);
                                             startActivity(intent);
                                             finish();
                                         }
@@ -307,6 +306,7 @@ public class AddOrderActivity extends AppCompatActivity {
         super.onBackPressed();
         Intent intent = new Intent(AddOrderActivity.this, MainActivity.class);
         intent.putExtra("vendorId", vendorId);
+        intent.putExtra("fragment", 0);
         startActivity(intent);
         finish();
     }

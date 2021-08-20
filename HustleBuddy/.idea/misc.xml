@@ -8,7 +8,9 @@
         <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/drawable/ic_launcher_background.xml" value="0.11666666666666667" />
         <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/activity_add_order.xml" value="0.19157608695652173" />
         <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/activity_add_sale.xml" value="0.25" />
-        <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/activity_expense.xml" value="0.22" />
+        <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/activity_authentication.xml" value="0.14130434782608695" />
+        <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/activity_expense.xml" value="0.25" />
+        <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/activity_login.xml" value="0.22" />
         <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/activity_main.xml" value="0.209375" />
         <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/activity_order.xml" value="0.22" />
         <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/activity_order_add.xml" value="0.19157608695652173" />
@@ -19,9 +21,16 @@
         <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/activity_sale.xml" value="0.18" />
         <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/activity_splash.xml" value="0.19157608695652173" />
         <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/activity_view_order.xml" value="0.19157608695652173" />
+        <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/fragment_authentication.xml" value="0.14130434782608695" />
+        <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/fragment_authentication_login.xml" value="0.22" />
+        <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/fragment_authentication_register.xml" value="0.21" />
+        <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/fragment_authetication.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/fragment_main.xml" value="0.1" />
+        <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/fragment_main_expense.xml" value="0.14130434782608695" />
         <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/layout_popup_add_orderedproduct.xml" value="0.25" />
+        <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/layout_request_reset_code.xml" value="0.25" />
         <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/layout_sale_card.xml" value="0.17255434782608695" />
+        <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/layout_view_expense.xml" value="0.25" />
         <entry key="..\:/Users/miker/Desktop/2021/HustleBuddyAndroidApp/HustleBuddy/app/src/main/res/layout/splash_background.xml" value="0.15" />
       </map>
     </option>

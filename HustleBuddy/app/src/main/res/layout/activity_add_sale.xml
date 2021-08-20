@@ -9,7 +9,7 @@
     <Spinner
         android:id="@+id/spinner_addSaleCashOrCredit"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
@@ -21,15 +21,15 @@
     <Spinner
         android:id="@+id/spinner_addSaleProductNames"
         android:layout_width="0dp"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="65dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.953"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner_addSaleCashOrCredit" />
 
     <Button
         android:id="@+id/btn_addSale"
@@ -49,56 +49,59 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:ems="10"
         android:hint="Quantity"
         android:inputType="number"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_addSaleRemaining" />
 
     <TextView
         android:id="@+id/txt_addSaleRemaining"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="125dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:text="Remaining Items: 0"
         android:textAlignment="textEnd"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/spinner_addSaleProductNames" />
 
     <TextView
         android:id="@+id/txt_addSaleSubTotal"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="220dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:text="Sub Total: R 0.00"
         android:textAlignment="textEnd"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_addSaleQuantity" />
 
     <Button
         android:id="@+id/btn_addSaleAddProduct"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="260dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:text="Add Product"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_addSaleSubTotal" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_addSale"
@@ -118,12 +121,12 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="300dp"
+        android:layout_marginTop="5dp"
         android:layout_marginEnd="10dp"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/spinner_addSaleCashOrCredit">
+        app:layout_constraintTop_toBottomOf="@+id/btn_addSaleAddProduct">
 
         <TextView
             android:id="@+id/textView21"
@@ -163,6 +166,7 @@
         android:text="Total: R 0.00"
         android:textAlignment="textEnd"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textSize="18sp"
         app:layout_constraintBottom_toTopOf="@+id/btn_addSale"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

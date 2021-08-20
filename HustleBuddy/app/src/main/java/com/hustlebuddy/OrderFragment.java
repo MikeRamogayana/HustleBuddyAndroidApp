@@ -38,20 +38,21 @@ public class OrderFragment extends Fragment {
     List<Order> orderList = new ArrayList<>();
     private Service service;
     private int vendorId;
+    private String title;
     Context context;
-    SaleFragment saleFragment;
 
-    public OrderFragment(Context context, int vendorId, SaleFragment saleFragment) {
+    boolean inflated = false;
+
+    public OrderFragment(Context context, int vendorId) {
         this.context = context;
         this.vendorId = vendorId;
-        this.saleFragment = saleFragment;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.activity_order, container, false);
+        view = inflater.inflate(R.layout.fragment_main_order, container, false);
         service = new Service(view.getContext());
 
         btn_orderAdd = view.findViewById(R.id.btn_createOrder);
@@ -64,16 +65,13 @@ public class OrderFragment extends Fragment {
         ordersRecyclerAdapter = new OrdersRecyclerAdapter(view.getContext(), orderList);
         recyclerView.setAdapter(ordersRecyclerAdapter);
 
-        RefreshOrderData();
-
         btn_orderAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saleFragment.barGraph.setVisibility(View.GONE);
                 Intent intent = new Intent(view.getContext(), AddOrderActivity.class);
                 intent.putExtra("vendorId", vendorId);
-                intent.putExtra("fragment", 2);
                 startActivity(intent);
+                getActivity().finish();
             }
         });
 
@@ -83,6 +81,11 @@ public class OrderFragment extends Fragment {
                 RefreshOrderData();
             }
         });
+
+        if(!inflated) {
+            RefreshOrderData();
+            inflated = true;
+        }
 
         return view;
     }

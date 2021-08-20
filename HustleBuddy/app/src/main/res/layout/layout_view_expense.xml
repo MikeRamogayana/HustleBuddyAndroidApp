@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/txt_viewExpenseLunch"
+                android:layout_width="129dp"
+                android:layout_height="wrap_content"
+                android:text="R 0.00"
+                android:textAlignment="center"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/txt_viewExpenseTransport"
+                android:layout_width="129dp"
+                android:layout_height="wrap_content"
+                android:text="R 0.00"
+                android:textAlignment="center"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/txt_viewExpenseOther"
+                android:layout_width="129dp"
+                android:layout_height="wrap_content"
+                android:text="R 0.00"
+                android:textAlignment="center"
+                android:textSize="16sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#724FC3F7"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="129dp"
+                android:layout_height="wrap_content"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textView27"
+                android:layout_width="129dp"
+                android:layout_height="wrap_content"
+                android:text="Date: "
+                android:textAlignment="textEnd"
+                android:textSize="16sp"
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:id="@+id/txt_expenseDate"
+                android:layout_width="129dp"
+                android:layout_height="wrap_content"
+                android:text="yyyy-mm-dd"
+                android:textAlignment="textStart"
+                android:textSize="16sp"
+                android:textStyle="bold|italic" />
+        </TableRow>
+    </TableLayout>
+
+</androidx.cardview.widget.CardView>

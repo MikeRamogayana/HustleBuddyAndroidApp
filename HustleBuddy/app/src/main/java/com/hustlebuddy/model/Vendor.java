@@ -14,7 +14,8 @@ public class Vendor {
     private String residentialAddress;
     private String companyName;
 
-    public Vendor(int vendorId, String firstName, String lastName, String email, String password, String contactNumber, String residentialAddress, String companyName) {
+    public Vendor(int vendorId, String firstName, String lastName, String email, String password,
+                  String contactNumber, String residentialAddress, String companyName) {
         this.vendorId = vendorId;
         this.firstName = firstName;
         this.lastName = lastName;

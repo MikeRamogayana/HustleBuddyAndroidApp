@@ -2,21 +2,14 @@ package com.hustlebuddy;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContract;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -60,17 +53,6 @@ public class SaleFragment extends Fragment {
 
     ColumnChartView barGraph;
     ColumnChartData columnChartData;
-    int default_data = 0;
-    int subcolumns_data = 1;
-    int stacked_data = 2;
-    int negative_sbcolumns_data = 3;
-    int negative_stacked_data = 4;
-    
-    boolean hasaxis = true;
-    boolean hasaxisnames = true;
-    boolean haslabels = false;
-    boolean isHaslabelsforselected = false;
-    int dataType = default_data;
 
     int vendorId;
     boolean inflated = false;
@@ -85,7 +67,7 @@ public class SaleFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.activity_sale, container, false);
+        view = inflater.inflate(R.layout.fragment_main_sale, container, false);
 
         service = new Service(view.getContext());
 
@@ -104,10 +86,10 @@ public class SaleFragment extends Fragment {
         btnCreateSale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                barGraph.setVisibility(View.GONE);
                 Intent intent = new Intent(view.getContext(), AddSaleActivity.class);
                 intent.putExtra("vendorId", vendorId);
                 startActivity(intent);
+                getActivity().finish();
             }
         });
 
