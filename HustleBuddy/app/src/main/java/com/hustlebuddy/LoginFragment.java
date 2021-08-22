@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,8 @@ public class LoginFragment extends Fragment {
 
     Service service;
 
+    ProgressBar progressBar;
+    TableLayout tableLogin;
     EditText txtEmail;
     EditText txtPassword;
     Button btnLogin;
@@ -42,6 +45,8 @@ public class LoginFragment extends Fragment {
     EditText txtNewPassword;
     EditText txtConfirmPassword;
     Button btnResetPassword;
+
+    Button btnCancel;
 
     String email, password;
     Vendor vendor = new Vendor();
@@ -59,6 +64,8 @@ public class LoginFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_authentication_login, container, false);
         service = new Service(context);
 
+        progressBar = view.findViewById(R.id.progress_login);
+        tableLogin = view.findViewById(R.id.table_login);
         txtEmail = view.findViewById(R.id.txt_loginEmail);
         txtPassword = view.findViewById(R.id.txt_loginPassword);
         btnLogin = view.findViewById(R.id.btn_loginLogin);
@@ -75,12 +82,15 @@ public class LoginFragment extends Fragment {
         txtConfirmPassword = view.findViewById(R.id.txt_resetConfirmPassword);
         btnResetPassword = view.findViewById(R.id.btn_resetPassword);
 
+        btnCancel = view.findViewById(R.id.btn_loginCancel);
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     email = txtEmail.getText().toString();
                     password = txtPassword.getText().toString();
+                    progressBar.setVisibility(View.VISIBLE);
                     service.Login(email, password, new Service.VendorResponseListener() {
                         @Override
                         public void onResponse(Vendor vendor) {
@@ -90,6 +100,7 @@ public class LoginFragment extends Fragment {
                             intent.putExtra("vendorId", vendor.getVendorId());
                             intent.putExtra("title", vendor.getCompanyName());
                             startActivity(intent);
+                            progressBar.setVisibility(View.GONE);
                             getActivity().finish();
                         }
 
@@ -107,8 +118,9 @@ public class LoginFragment extends Fragment {
         btnReset.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                tableLogin.setVisibility(View.GONE);
                 tableResetSendCode.setVisibility(View.VISIBLE);
-                tableResetPassword.setVisibility(View.INVISIBLE);
+                btnCancel.setVisibility(View.VISIBLE);
             }
         });
 
@@ -120,6 +132,7 @@ public class LoginFragment extends Fragment {
                     if(txtResetEmail.getText().toString().contains("@")) {
                         email = txtResetEmail.getText().toString();
                         EmailMessage emailMessage = new EmailMessage(email, "Password Reset Code", String.valueOf(code));
+                        progressBar.setVisibility(View.VISIBLE);
                         service.SendEmail(emailMessage, new Service.VolleyResponseListener() {
                             @Override
                             public void onError(String message) {
@@ -129,8 +142,9 @@ public class LoginFragment extends Fragment {
                             @Override
                             public void onResponse(Object response) {
                                 Toast.makeText(context, "Email sent successfully...", Toast.LENGTH_SHORT).show();
+                                tableResetSendCode.setVisibility(View.GONE);
                                 tableResetPassword.setVisibility(View.VISIBLE);
-                                tableResetSendCode.setVisibility(View.INVISIBLE);
+                                progressBar.setVisibility(View.GONE);
                             }
                         });
                     } else {
@@ -146,6 +160,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(ResetFieldsValid()) {
+                    progressBar.setVisibility(View.VISIBLE);
                     service.GetVendorByEmail(email, new Service.VendorResponseListener() {
                         @Override
                         public void onResponse(Vendor vendor) {
@@ -159,7 +174,10 @@ public class LoginFragment extends Fragment {
                                         @Override
                                         public void onResponse(Object response) {
                                             Toast.makeText(context, "Password reset successfully...", Toast.LENGTH_SHORT).show();
-                                            tableResetPassword.setVisibility(View.INVISIBLE);
+                                            btnCancel.setVisibility(View.GONE);
+                                            tableResetPassword.setVisibility(View.GONE);
+                                            tableLogin.setVisibility(View.VISIBLE);
+                                            progressBar.setVisibility(View.GONE);
                                         }
                                     });
                         }
@@ -170,6 +188,16 @@ public class LoginFragment extends Fragment {
                         }
                     });
                 }
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btnCancel.setVisibility(View.GONE);
+                tableResetPassword.setVisibility(View.GONE);
+                tableResetSendCode.setVisibility(View.GONE);
+                tableLogin.setVisibility(View.VISIBLE);
             }
         });
 

@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     OrderFragment orderFragment;
     ExpenseFragment expenseFragment;
 
-    ImageView imageView;
     TabLayout tabLayout;
     ViewPager viewPager;
     TextView textTitle;
@@ -33,7 +32,6 @@ public class MainActivity extends AppCompatActivity {
     Intent intent;
 
     int vendorId;
-    String title;
 
     Service service;
 
@@ -47,22 +45,11 @@ public class MainActivity extends AppCompatActivity {
 
         service = new Service(this);
 
-        imageView = findViewById(R.id.img_mainAccount);
         tabLayout = findViewById(R.id.tabs);
         viewPager = findViewById(R.id.view_pager);
         textTitle = findViewById(R.id.title);
 
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, AccountActivity.class);
-                intent.putExtra("vendorId", vendorId);
-                startActivity(intent);
-            }
-        });
-
         setupViewPager();
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

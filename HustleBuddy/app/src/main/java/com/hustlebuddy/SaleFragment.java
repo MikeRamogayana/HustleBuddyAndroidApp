@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,6 +44,7 @@ public class SaleFragment extends Fragment {
     Service service;
     View view;
 
+    ProgressBar progressBar;
     Button btnCreateSale;
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
@@ -71,6 +73,7 @@ public class SaleFragment extends Fragment {
 
         service = new Service(view.getContext());
 
+        progressBar = view.findViewById(R.id.progress_sale);
         btnSaleRefresh = view.findViewById(R.id.btn_recentSaleRefresh);
         btnCreateSale = view.findViewById(R.id.btn_createSale);
         barGraph = view.findViewById(R.id.chart_saleBarGraph);
@@ -119,21 +122,28 @@ public class SaleFragment extends Fragment {
     }
 
     private void RefreshSaleData() {
+        progressBar.setVisibility(View.VISIBLE);
         service.GetDailySales(vendorId, new Service.SalesListener() {
             @Override
             public void onResponse(ArrayList<Sale> sales) {
                 saleProductAdapter.getProductList().clear();
                 saleProductAdapter.getQuantityList().clear();
-                saleProductAdapter.notifyDataSetChanged();
+                saleProductAdapter.getDateList().clear();
                 saleList.clear();
                 saleList.addAll(sales);
-                int i;
+                sales.sort(new Comparator<Sale>() {
+                    @Override
+                    public int compare(Sale o1, Sale o2) {
+                        return o2.getDate().compareTo(o1.getDate());
+                    }
+                });
                 for (Sale sale: sales) {
                     service.GetProductByProductCode(sale.getProductCode(), new com.hustlebuddy.controller.Service.ProductListener() {
                         @Override
                         public void onResponse(Product product) {
                             saleProductAdapter.getProductList().add(product);
                             saleProductAdapter.getQuantityList().add(sale.getQuantity());
+                            saleProductAdapter.getDateList().add(sale.getDate());
                             saleProductAdapter.notifyDataSetChanged();
                         }
 
@@ -143,6 +153,7 @@ public class SaleFragment extends Fragment {
                         }
                     });
                 }
+                progressBar.setVisibility(View.GONE);
                 DrawBarChart(saleList);
             }
 
@@ -194,7 +205,7 @@ public class SaleFragment extends Fragment {
                 axisValues.add(new AxisValue(i).setLabel(xAxisData.get(i)));
 
                 SubcolumnValue subcolumnValue = new SubcolumnValue(yAxisData.get(i), ChartUtils.pickColor());
-                subcolumnValue.setLabel(xAxisData.get(i));
+                subcolumnValue.setLabel(String.valueOf(yAxisData.get(i)));
                 values.add(subcolumnValue);
 
                 Column column = new Column(Arrays.asList(subcolumnValue));

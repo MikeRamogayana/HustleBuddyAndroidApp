@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,7 @@ public class ExpenseFragment extends Fragment {
 
     Service service;
 
+    ProgressBar progressBar;
     FloatingActionButton btnRefresh;
     ConstraintLayout layout;
     TextView txtLunch;
@@ -61,6 +63,7 @@ public class ExpenseFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_main_expense, container, false);
         service = new Service(view.getContext());
 
+        progressBar = view.findViewById(R.id.progress_expense);
         btnRefresh = view.findViewById(R.id.btn_expenseRefresh);
         layout = view.findViewById(R.id.expense_fragment);
         txtLunch = view.findViewById(R.id.txt_expenseLunch);
@@ -84,6 +87,7 @@ public class ExpenseFragment extends Fragment {
                     dailyExpense.setLunch(Double.parseDouble(txtLunch.getText().toString()));
                     dailyExpense.setTransport(Double.parseDouble(txtTransport.getText().toString()));
                     dailyExpense.setOther(Double.parseDouble(txtOther.getText().toString()));
+                    progressBar.setVisibility(View.VISIBLE);
                     service.UpdateDailyExpense(dailyExpense, new Service.VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
@@ -114,6 +118,7 @@ public class ExpenseFragment extends Fragment {
     }
 
     private void GetData() {
+        progressBar.setVisibility(View.VISIBLE);
         service.GetDailyStockByVendorId(vendorId, new Service.DailyStockListener() {
             @Override
             public void onResponse(DailyStock dailyStock) {
@@ -126,6 +131,7 @@ public class ExpenseFragment extends Fragment {
                             txtTransport.setText(decimalFormat.format(dailyExpense.getTransport()));
                             txtOther.setText(decimalFormat.format(dailyExpense.getOther()));
                         }
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -143,6 +149,7 @@ public class ExpenseFragment extends Fragment {
     }
 
     private void UpdateRecyclerView() {
+        progressBar.setVisibility(View.VISIBLE);
         service.GetMonthlyStocks(vendorId, new Service.DailyStocksListener() {
             @Override
             public void onResponse(ArrayList<DailyStock> dailyStocks) {
@@ -168,6 +175,7 @@ public class ExpenseFragment extends Fragment {
                         }
                     });
                 }
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override

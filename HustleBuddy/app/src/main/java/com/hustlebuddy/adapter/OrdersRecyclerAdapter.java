@@ -3,6 +3,7 @@ package com.hustlebuddy.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,11 +45,17 @@ public class OrdersRecyclerAdapter extends RecyclerView.Adapter<OrdersRecyclerAd
 
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, @SuppressLint("RecyclerView") int position) {
+        if(orderList.get(position).getStatus().equalsIgnoreCase("cancelled")) {
+            holder.card_order.setCardBackgroundColor(Color.parseColor("#99FF3000"));
+        } else if(orderList.get(position).getStatus().equalsIgnoreCase("completed")) {
+            holder.card_order.setCardBackgroundColor(Color.parseColor("#9987FA00"));
+        } else {
+            holder.card_order.setCardBackgroundColor(Color.parseColor("#9973D7FF"));
+        }
+
         holder.txt_orderId.setText(String.valueOf(orderList.get(position).getOrderId()));
         holder.txt_orderCustomerName.setText(orderList.get(position).getCustomerName());
-        holder.txt_orderContactNumber.setText(orderList.get(position).getContactNumber());
         holder.txt_orderDateExpected.setText(dateTimeFormatter.format(orderList.get(position).getDateExpected()));
-        holder.txt_orderStatus.setText(orderList.get(position).getStatus());
 
         holder.card_order.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,18 +76,14 @@ public class OrdersRecyclerAdapter extends RecyclerView.Adapter<OrdersRecyclerAd
         public CardView card_order;
         public TextView txt_orderId;
         public TextView txt_orderCustomerName;
-        public TextView txt_orderContactNumber;
         public TextView txt_orderDateExpected;
-        public TextView txt_orderStatus;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
             card_order = itemView.findViewById(R.id.card_order);
             txt_orderId = itemView.findViewById(R.id.txt_orderId);
             txt_orderCustomerName = itemView.findViewById(R.id.txt_orderCustomerName);
-            txt_orderContactNumber = itemView.findViewById(R.id.txt_orderContactNumber);
             txt_orderDateExpected = itemView.findViewById(R.id.txt_orderDateExpected);
-            txt_orderStatus = itemView.findViewById(R.id.txt_orderStatus);
         }
     }
 

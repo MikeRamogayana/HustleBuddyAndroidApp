@@ -16,6 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,12 +38,15 @@ public class AddSaleActivity extends AppCompatActivity {
 
     Service service;
 
+    Button btnCreateProduct;
+    TableLayout tableAddProduct;
+    Button btnAddProduct;
+    Button btnCancel;
     Spinner spinnerCashOrCredit;
     Spinner spinnerProductNames;
     TextView txtRemaining;
     EditText txtQuantity;
     TextView txtSubTotal;
-    Button btnAddProduct;
     RecyclerView recyclerView;
     TextView txtTotal;
     Button btnAddSale;
@@ -55,8 +59,8 @@ public class AddSaleActivity extends AppCompatActivity {
     List<Product> productList = new ArrayList<>();
     List<TradingStock> tradingStockList = new ArrayList<>();
     List<String> productNamesList = new ArrayList<>();
-    List<String> cashOrCreditList = Arrays.asList("cash", "credit");
-    String cashOrCredit = "cash";
+    List<String> cashOrCreditList = Arrays.asList("Cash", "Credit");
+    String cashOrCredit = "Cash";
     DailyStock stock;
     int position;
     int vendorId;
@@ -73,15 +77,57 @@ public class AddSaleActivity extends AppCompatActivity {
         vendorId = intent.getIntExtra("vendorId",0);
         service = new Service(this);
 
+        btnCreateProduct = findViewById(R.id.btn_addSaleCreateProduct);
+        tableAddProduct = findViewById(R.id.table_addSaleAddProduct);
+        btnAddProduct = findViewById(R.id.btn_addSaleAddProduct);
+        btnCancel = findViewById(R.id.btn_addSaleCancelProduct);
         spinnerCashOrCredit = findViewById(R.id.spinner_addSaleCashOrCredit);
         spinnerProductNames = findViewById(R.id.spinner_addSaleProductNames);
         txtRemaining = findViewById(R.id.txt_addSaleRemaining);
         txtQuantity = findViewById(R.id.txt_addSaleQuantity);
         txtSubTotal = findViewById(R.id.txt_addSaleSubTotal);
-        btnAddProduct = findViewById(R.id.btn_addSaleAddProduct);
         recyclerView = findViewById(R.id.recycler_addSale);
         txtTotal = findViewById(R.id.txt_addSaleTotal);
         btnAddSale = findViewById(R.id.btn_addSale);
+
+        btnCreateProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tableAddProduct.setVisibility(View.VISIBLE);
+            }
+        });
+
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tableAddProduct.setVisibility(View.GONE);
+            }
+        });
+
+        btnAddProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try{
+                    if(Integer.parseInt(txtQuantity.getText().toString()) > 0) {
+                        saleProductAdapter.getQuantityList().add(Integer.parseInt(txtQuantity.getText().toString()));
+                        saleProductAdapter.getProductList().add(productList.get(position));
+                        saleProductAdapter.notifyDataSetChanged();
+                        double total = 0;
+                        for(int i = 0; i < saleProductAdapter.getItemCount(); i++) {
+                            total += saleProductAdapter.getProductList().get(i).getSellingPrice() * saleProductAdapter.getQuantityList().get(i);
+                        }
+                        txtTotal.setText(("Total: R " + decimalFormat.format(total)));
+                        saleCount++;
+                        tableAddProduct.setVisibility(View.GONE);
+                        Toast.makeText(AddSaleActivity.this, "Product added...", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(AddSaleActivity.this, "Quantity can not be less than 1!!!", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(AddSaleActivity.this, "Quantity can not be empty!!!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         cashOrCreditAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, cashOrCreditList);
         cashOrCreditAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -125,30 +171,6 @@ public class AddSaleActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {}
-        });
-
-        btnAddProduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try{
-                    if(Integer.parseInt(txtQuantity.getText().toString()) > 0) {
-                        saleProductAdapter.getQuantityList().add(Integer.parseInt(txtQuantity.getText().toString()));
-                        saleProductAdapter.getProductList().add(productList.get(position));
-                        saleProductAdapter.notifyDataSetChanged();
-                        double total = 0;
-                        for(int i = 0; i < saleProductAdapter.getItemCount(); i++) {
-                            total += saleProductAdapter.getProductList().get(i).getSellingPrice() * saleProductAdapter.getQuantityList().get(i);
-                        }
-                        txtTotal.setText(("Total: R " + decimalFormat.format(total)));
-                        saleCount++;
-                        Toast.makeText(AddSaleActivity.this, "Product added...", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(AddSaleActivity.this, "Quantity can not be less than 1!!!", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(AddSaleActivity.this, "Quantity can not be empty!!!", Toast.LENGTH_SHORT).show();
-                }
-            }
         });
 
         saleProductAdapter = new SaleProductAdapter();

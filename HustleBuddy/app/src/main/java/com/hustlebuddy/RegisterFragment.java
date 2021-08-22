@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,7 @@ public class RegisterFragment extends Fragment {
 
     Service service;
 
+    ProgressBar progressBar;
     TextView txtFirstName;
     TextView txtLastName;
     TextView txtCompanyName;
@@ -50,6 +52,7 @@ public class RegisterFragment extends Fragment {
 
         service = new Service(context);
 
+        progressBar = view.findViewById(R.id.progress_register);
         txtFirstName = view.findViewById(R.id.txt_registerFirstName);
         txtLastName = view.findViewById(R.id.txt_registerLastName);
         txtCompanyName = view.findViewById(R.id.txt_registerCompanyName);
@@ -68,6 +71,7 @@ public class RegisterFragment extends Fragment {
                             txtEmail.getText().toString(), txtConfirm.getText().toString(),
                             txtContact.getText().toString(), txtAddress.getText().toString(), 
                             txtCompanyName.getText().toString());
+                    progressBar.setVisibility(View.VISIBLE);
                     service.Register(vendor, new Service.VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
@@ -78,6 +82,7 @@ public class RegisterFragment extends Fragment {
                         public void onResponse(Object response) {
                             Toast.makeText(context, "Account created successfully...", Toast.LENGTH_SHORT).show();
                             viewPager.setCurrentItem(0, true);
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
                 }
