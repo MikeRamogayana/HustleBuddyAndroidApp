@@ -77,6 +77,7 @@ public class ExpenseFragment extends Fragment {
             public void onClick(View v) {
                 GetData();
                 UpdateRecyclerView();
+                btnRefresh.setVisibility(View.GONE);
             }
         });
 
@@ -137,6 +138,7 @@ public class ExpenseFragment extends Fragment {
                     @Override
                     public void onError(String message) {
                         Toast.makeText(context, "Could not load daily expense", Toast.LENGTH_SHORT).show();
+                        btnRefresh.setVisibility(View.VISIBLE);
                     }
                 });
             }
@@ -144,6 +146,7 @@ public class ExpenseFragment extends Fragment {
             @Override
             public void onError(String message) {
                 Toast.makeText(context, "Could not daily stock", Toast.LENGTH_SHORT).show();
+                btnRefresh.setVisibility(View.VISIBLE);
             }
         });
     }
@@ -172,6 +175,7 @@ public class ExpenseFragment extends Fragment {
                         @Override
                         public void onError(String message) {
                             Toast.makeText(context, "Could not load monthly expenses!!!", Toast.LENGTH_SHORT).show();
+                            btnRefresh.setVisibility(View.VISIBLE);
                         }
                     });
                 }
@@ -181,6 +185,7 @@ public class ExpenseFragment extends Fragment {
             @Override
             public void onError(String message) {
                 Toast.makeText(context, "Could not load monthly stocks!!!", Toast.LENGTH_SHORT).show();
+                btnRefresh.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
             }
         });

@@ -15,14 +15,14 @@
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btn_recentSaleRefresh"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:layout_marginBottom="10dp"
+            android:layout_height="75dp"
             android:clickable="true"
-            app:backgroundTint="#C8C5CAE9"
+            android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:maxImageSize="42dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:maxImageSize="72dp"
             app:srcCompat="@drawable/ic_baseline_refresh_24"
             tools:ignore="SpeakableTextPresentCheck" />
 
@@ -50,7 +50,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_createSale"
-            android:background="@drawable/edittext_border"/>
+            android:background="@drawable/primary_boarder"/>
 
         <TextView
             android:id="@+id/textView"

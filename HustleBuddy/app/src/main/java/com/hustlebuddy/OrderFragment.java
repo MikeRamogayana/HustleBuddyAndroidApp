@@ -78,6 +78,9 @@ public class OrderFragment extends Fragment {
         txtPending = view.findViewById(R.id.txt_status_pending);
         txtCompleted = view.findViewById(R.id.txt_status_completed);
 
+        btn_orderRefresh.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
+
         arrayAdapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_item, statusList);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerStatus.setAdapter(arrayAdapter);
@@ -130,6 +133,7 @@ public class OrderFragment extends Fragment {
         btn_orderRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btn_orderRefresh.setVisibility(View.GONE);
                 RefreshOrderData();
             }
         });
@@ -169,6 +173,7 @@ public class OrderFragment extends Fragment {
             @Override
             public void onError(String message) {
                 Toast.makeText(view.getContext(), "Could not load orders...", Toast.LENGTH_SHORT).show();
+                btn_orderRefresh.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
             }
         });

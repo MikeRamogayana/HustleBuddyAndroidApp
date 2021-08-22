@@ -82,6 +82,7 @@ public class SaleFragment extends Fragment {
         btnSaleRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btnSaleRefresh.setVisibility(View.GONE);
                 RefreshSaleData();
             }
         });
@@ -150,6 +151,7 @@ public class SaleFragment extends Fragment {
                         @Override
                         public void onError(String message) {
                             Toast.makeText(view.getContext(), "Could not load product sales!!!", Toast.LENGTH_SHORT).show();
+                            btnSaleRefresh.setVisibility(View.VISIBLE);
                         }
                     });
                 }
@@ -160,6 +162,7 @@ public class SaleFragment extends Fragment {
             @Override
             public void onError(String message) {
                 Toast.makeText(view.getContext(), "Could not load recent sales!!!", Toast.LENGTH_SHORT).show();
+                btnSaleRefresh.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
             }
         });
@@ -227,7 +230,6 @@ public class SaleFragment extends Fragment {
             barGraph.setVisibility(View.VISIBLE);
             barGraph.setColumnChartData(columnChartData);
             columnChartData.finish();
-            
         }
     }
 }

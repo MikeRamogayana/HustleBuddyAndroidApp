@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="EditTextStyle" parent="@android:style/Widget.EditText">
-        <item name="android:background">@drawable/edittext_border</item>
+        <item name="android:background">@drawable/primary_boarder</item>
         <item name="android:padding">5dp</item>
     </style>
 

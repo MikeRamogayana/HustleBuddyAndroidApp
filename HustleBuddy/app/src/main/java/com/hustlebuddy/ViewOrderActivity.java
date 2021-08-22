@@ -11,6 +11,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -122,41 +123,37 @@ public class ViewOrderActivity extends AppCompatActivity {
                                 } else {
                                     txtDateExpected = (year + "-" + (month + 1) + "-" + dayOfMonth);
                                 }
+                                timeHour = calendar.get(Calendar.HOUR_OF_DAY);
+                                timeMinute = calendar.get(Calendar.MINUTE);
+                                TimePickerDialog timePickerDialog = new TimePickerDialog(ViewOrderActivity.this,
+                                        new TimePickerDialog.OnTimeSetListener() {
+                                            @Override
+                                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                                timeHour = hourOfDay;
+                                                timeMinute = minute;
+                                                if(minute == 0 && hourOfDay == 0){
+                                                    txtDateExpected += " " + ("00:00");
+                                                } else if(minute == 0){
+                                                    txtDateExpected += " " + (hourOfDay + ":00");
+                                                } else  if(hourOfDay == 0) {
+                                                    txtDateExpected += " " + ("00" + minute);
+                                                }else if(minute < 10 && hourOfDay < 10){
+                                                    txtDateExpected += " " + ("0" + hourOfDay + ":0" + minute);
+                                                } else if(minute < 10){
+                                                    txtDateExpected += " " + (hourOfDay + ":0" + minute);
+                                                } else  if(hourOfDay < 10){
+                                                    txtDateExpected += " " + ("0" + hourOfDay + ":" + minute);
+                                                } else {
+                                                    txtDateExpected += " " + (hourOfDay + ":" + minute);
+                                                }
+                                                txt_orderDateExpected.setText(txtDateExpected);
+                                            }
+                                        }, timeHour, timeMinute, true);
+                                timePickerDialog.show();
                             }
                         }, dateYear, dateMonth, dateDay);
                 datePickerDialog.show();
-                datePickerDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        timeHour = calendar.get(Calendar.HOUR_OF_DAY);
-                        timeMinute = calendar.get(Calendar.MINUTE);
-                        TimePickerDialog timePickerDialog = new TimePickerDialog(ViewOrderActivity.this,
-                                new TimePickerDialog.OnTimeSetListener() {
-                                    @Override
-                                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                        timeHour = hourOfDay;
-                                        timeMinute = minute;
-                                        if(minute == 0 && hourOfDay == 0){
-                                            txtDateExpected += " " + ("00:00");
-                                        } else if(minute == 0){
-                                            txtDateExpected += " " + (hourOfDay + ":00");
-                                        } else  if(hourOfDay == 0) {
-                                            txtDateExpected += " " + ("00" + minute);
-                                        }else if(minute < 10 && hourOfDay < 10){
-                                            txtDateExpected += " " + ("0" + hourOfDay + ":0" + minute);
-                                        } else if(minute < 10){
-                                            txtDateExpected += " " + (hourOfDay + ":0" + minute);
-                                        } else  if(hourOfDay < 10){
-                                            txtDateExpected += " " + ("0" + hourOfDay + ":" + minute);
-                                        } else {
-                                            txtDateExpected += " " + (hourOfDay + ":" + minute);
-                                        }
-                                        txt_orderDateExpected.setText(txtDateExpected);
-                                    }
-                                }, timeHour, timeMinute, true);
-                        timePickerDialog.show();
-                    }
-                });
+
             }
         });
 

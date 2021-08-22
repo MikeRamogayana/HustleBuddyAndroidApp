@@ -91,7 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="5dp"
-                    android:background="@drawable/edittext_border">
+                    android:background="@drawable/primary_boarder">
 
                     <Spinner
                         android:id="@+id/spinner_view_orderStatus"
@@ -111,7 +111,7 @@
                         android:id="@+id/txt_view_orderTimeMade"
                         android:layout_width="390dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/edittext_border"
+                        android:background="@drawable/primary_boarder"
                         android:hint="yyyy-mm-dd hh:mm"
                         android:paddingLeft="5dp"
                         android:textAlignment="textStart"
@@ -127,7 +127,7 @@
                         android:id="@+id/txt_view_orderTimeExpected"
                         android:layout_width="390dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/edittext_border"
+                        android:background="@drawable/primary_boarder"
                         android:hint="yyyy-mm-dd hh:mm"
                         android:paddingLeft="5dp"
                         android:textAlignment="textStart"
@@ -174,7 +174,7 @@
                 android:id="@+id/tableRow5"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@drawable/edittext_border"
+                android:background="@drawable/primary_boarder"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="5dp"
