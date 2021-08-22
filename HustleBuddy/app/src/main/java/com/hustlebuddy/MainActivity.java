@@ -10,9 +10,11 @@ import androidx.annotation.RequiresApi;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hustlebuddy.adapter.FragmentTabAdapter;
 import com.hustlebuddy.controller.Service;
@@ -32,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     Intent intent;
 
     int vendorId;
+    int count = 0;
 
     Service service;
 
@@ -76,5 +79,22 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_baseline_access_alarm_24);
         tabLayout.getTabAt(2).setIcon(R.drawable.ic_baseline_attach_money_24);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(count == 0) {
+            Toast.makeText(this, "Double click to exit app...", Toast.LENGTH_SHORT).show();
+        }
+        count++;
+        if(count > 1) {
+            super.onBackPressed();
+        }
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                count = 0;
+            }
+        }, 1500);
     }
 }
