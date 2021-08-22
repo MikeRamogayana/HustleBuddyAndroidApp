@@ -138,9 +138,9 @@ public class AddOrderActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if(count > 0) {
-                    txt_orderSubTotal.setText("Sub Total       R " + decimalFormat.format(product.getSellingPrice() * Integer.parseInt(s.toString())));
+                    txt_orderSubTotal.setText("Sub Total: R " + decimalFormat.format(product.getSellingPrice() * Integer.parseInt(s.toString())));
                 } else {
-                    txt_orderSubTotal.setText("Sub Total       R 0.00");
+                    txt_orderSubTotal.setText("Sub Total: R 0.00");
                 }
             }
 

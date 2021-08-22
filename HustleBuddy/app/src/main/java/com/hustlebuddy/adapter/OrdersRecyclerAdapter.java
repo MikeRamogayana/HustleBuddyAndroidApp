@@ -9,11 +9,11 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hustlebuddy.R;
@@ -46,18 +46,18 @@ public class OrdersRecyclerAdapter extends RecyclerView.Adapter<OrdersRecyclerAd
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, @SuppressLint("RecyclerView") int position) {
         if(orderList.get(position).getStatus().equalsIgnoreCase("cancelled")) {
-            holder.card_order.setCardBackgroundColor(Color.parseColor("#99FF3000"));
+            holder.tableRow.setBackgroundColor(Color.parseColor("#99FF3000"));
         } else if(orderList.get(position).getStatus().equalsIgnoreCase("completed")) {
-            holder.card_order.setCardBackgroundColor(Color.parseColor("#9987FA00"));
+            holder.tableRow.setBackgroundColor(Color.parseColor("#9987FA00"));
         } else {
-            holder.card_order.setCardBackgroundColor(Color.parseColor("#9973D7FF"));
+            holder.tableRow.setBackgroundColor(Color.parseColor("#9973D7FF"));
         }
 
         holder.txt_orderId.setText(String.valueOf(orderList.get(position).getOrderId()));
         holder.txt_orderCustomerName.setText(orderList.get(position).getCustomerName());
         holder.txt_orderDateExpected.setText(dateTimeFormatter.format(orderList.get(position).getDateExpected()));
 
-        holder.card_order.setOnClickListener(new View.OnClickListener() {
+        holder.tableRow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ViewOrderActivity.class);
@@ -75,14 +75,14 @@ public class OrdersRecyclerAdapter extends RecyclerView.Adapter<OrdersRecyclerAd
     }
 
     public class OrderViewHolder extends RecyclerView.ViewHolder {
-        public CardView card_order;
+        public TableRow tableRow;
         public TextView txt_orderId;
         public TextView txt_orderCustomerName;
         public TextView txt_orderDateExpected;
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
-            card_order = itemView.findViewById(R.id.card_order);
+            tableRow = itemView.findViewById(R.id.card_order);
             txt_orderId = itemView.findViewById(R.id.txt_orderId);
             txt_orderCustomerName = itemView.findViewById(R.id.txt_orderCustomerName);
             txt_orderDateExpected = itemView.findViewById(R.id.txt_orderDateExpected);
