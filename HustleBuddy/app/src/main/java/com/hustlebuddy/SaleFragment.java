@@ -160,6 +160,7 @@ public class SaleFragment extends Fragment {
             @Override
             public void onError(String message) {
                 Toast.makeText(view.getContext(), "Could not load recent sales!!!", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

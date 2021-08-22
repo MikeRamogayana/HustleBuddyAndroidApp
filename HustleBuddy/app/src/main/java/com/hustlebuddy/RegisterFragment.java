@@ -76,6 +76,7 @@ public class RegisterFragment extends Fragment {
                         @Override
                         public void onError(String message) {
                             Toast.makeText(context, "Could not create account!!!", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
                         }
 
                         @Override

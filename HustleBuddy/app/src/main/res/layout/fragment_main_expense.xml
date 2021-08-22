@@ -100,6 +100,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -155,55 +156,18 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btn_expenseUpdate" />
 
-        <TableRow
-            android:id="@+id/tableRow5"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:padding="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView20">
-
-            <TextView
-                android:id="@+id/textView24"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:text="Lunch"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textView25"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:text="Transport"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textView26"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:text="Other"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-        </TableRow>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_Expense"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tableRow5" />
+            app:layout_constraintTop_toBottomOf="@+id/textView20" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

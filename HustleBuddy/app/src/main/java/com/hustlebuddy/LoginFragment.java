@@ -107,10 +107,12 @@ public class LoginFragment extends Fragment {
                         @Override
                         public void onError(String message) {
                             Toast.makeText(context, "Login failed check your fields!!!", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
                 } catch (Exception e) {
                     Toast.makeText(context, "Login form invalid, check your fields!!!", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
                 }
             }
         });
@@ -137,6 +139,7 @@ public class LoginFragment extends Fragment {
                             @Override
                             public void onError(String message) {
                                 Toast.makeText(context, "Could not sent email!!!", Toast.LENGTH_SHORT).show();
+                                progressBar.setVisibility(View.GONE);
                             }
 
                             @Override
@@ -169,6 +172,7 @@ public class LoginFragment extends Fragment {
                                         @Override
                                         public void onError(String message) {
                                             Toast.makeText(context, "Could not reset password!!!", Toast.LENGTH_SHORT).show();
+                                            progressBar.setVisibility(View.GONE);
                                         }
 
                                         @Override
@@ -185,6 +189,7 @@ public class LoginFragment extends Fragment {
                         @Override
                         public void onError(String message) {
                             Toast.makeText(context, "Account not found!!!", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
                         }
                     });
                 }

@@ -30,7 +30,7 @@ public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseH
     @NonNull
     @Override
     public ExpenseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ExpenseHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_view_expense, null));
+        return new ExpenseHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_expense_card, null));
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

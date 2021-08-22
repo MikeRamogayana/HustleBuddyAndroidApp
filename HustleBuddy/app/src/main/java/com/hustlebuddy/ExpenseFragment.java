@@ -171,7 +171,7 @@ public class ExpenseFragment extends Fragment {
 
                         @Override
                         public void onError(String message) {
-                            Toast.makeText(context, "Could not load monthly expenses!!!", Toast.LENGTH_SHORT);
+                            Toast.makeText(context, "Could not load monthly expenses!!!", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -180,7 +180,8 @@ public class ExpenseFragment extends Fragment {
 
             @Override
             public void onError(String message) {
-                Toast.makeText(context, "Could not load monthly stocks!!!", Toast.LENGTH_SHORT);
+                Toast.makeText(context, "Could not load monthly stocks!!!", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

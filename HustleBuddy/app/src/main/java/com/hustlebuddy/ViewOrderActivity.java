@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -12,8 +15,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.hustlebuddy.adapter.SaleProductAdapter;
@@ -22,15 +28,18 @@ import com.hustlebuddy.model.Order;
 import com.hustlebuddy.model.OrderedProduct;
 import com.hustlebuddy.model.Product;
 
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class ViewOrderActivity extends AppCompatActivity {
 
-    TextView txt_orderId;
+    ProgressBar progressBar;
     RecyclerView recyclerView;
     TextView txt_orderCustomerName;
     TextView txt_orderContactNumber;
@@ -51,6 +60,10 @@ public class ViewOrderActivity extends AppCompatActivity {
     Service service;
 
     private int orderId;
+    private int vendorId;
+    private double total = 0;
+    private String txtDateExpected;
+    int dateYear, dateMonth, dateDay, timeHour, timeMinute;
     private Order order = new Order();
     private List<OrderedProduct> orderedProductList = new ArrayList<>();
     private List<Product> productList = new ArrayList<>();
@@ -65,7 +78,9 @@ public class ViewOrderActivity extends AppCompatActivity {
         Intent intent = getIntent();
         service = new Service(ViewOrderActivity.this);
         orderId = intent.getIntExtra("orderId", 0);
+        vendorId = intent.getIntExtra("vendorId", 0);
 
+        progressBar = findViewById(R.id.progress_view_order);
         recyclerView = findViewById(R.id.recycler_view_orderOrderedProducts);
         txt_orderCustomerName = findViewById(R.id.txt_view_orderCustomerName);
         txt_orderContactNumber = findViewById(R.id.txt_view_orderContactNumber);
@@ -74,6 +89,7 @@ public class ViewOrderActivity extends AppCompatActivity {
         txt_orderDateMade = findViewById(R.id.txt_view_orderTimeMade);
         txt_orderDateExpected = findViewById(R.id.txt_view_orderTimeExpected);
         txt_orderDescription = findViewById(R.id.txt_view_orderDescription);
+        txt_orderTotal = findViewById(R.id.txt_orderTotal);
         btn_updateOrder = findViewById(R.id.btn_orderUpdate);
 
         arrayAdapter = new ArrayAdapter<>(ViewOrderActivity.this, android.R.layout.simple_spinner_item, statusList);
@@ -85,18 +101,89 @@ public class ViewOrderActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(saleProductAdapter);
 
+        txt_orderDateExpected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                dateYear = calendar.get(Calendar.YEAR);
+                dateMonth = calendar.get(Calendar.MONTH);
+                dateDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(ViewOrderActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                if(month < 10 && dayOfMonth < 10) {
+                                    txtDateExpected = (year + "-0" + (month + 1) + "-0" + dayOfMonth);
+                                } else if(month < 10) {
+                                    txtDateExpected = (year + "-0" + (month + 1) + "-" + dayOfMonth);
+                                } else if(dayOfMonth < 10) {
+                                    txtDateExpected = (year + "-" + (month + 1) + "-0" + dayOfMonth);
+                                } else {
+                                    txtDateExpected = (year + "-" + (month + 1) + "-" + dayOfMonth);
+                                }
+                            }
+                        }, dateYear, dateMonth, dateDay);
+                datePickerDialog.show();
+                datePickerDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        timeHour = calendar.get(Calendar.HOUR_OF_DAY);
+                        timeMinute = calendar.get(Calendar.MINUTE);
+                        TimePickerDialog timePickerDialog = new TimePickerDialog(ViewOrderActivity.this,
+                                new TimePickerDialog.OnTimeSetListener() {
+                                    @Override
+                                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                                        timeHour = hourOfDay;
+                                        timeMinute = minute;
+                                        if(minute == 0 && hourOfDay == 0){
+                                            txtDateExpected += " " + ("00:00");
+                                        } else if(minute == 0){
+                                            txtDateExpected += " " + (hourOfDay + ":00");
+                                        } else  if(hourOfDay == 0) {
+                                            txtDateExpected += " " + ("00" + minute);
+                                        }else if(minute < 10 && hourOfDay < 10){
+                                            txtDateExpected += " " + ("0" + hourOfDay + ":0" + minute);
+                                        } else if(minute < 10){
+                                            txtDateExpected += " " + (hourOfDay + ":0" + minute);
+                                        } else  if(hourOfDay < 10){
+                                            txtDateExpected += " " + ("0" + hourOfDay + ":" + minute);
+                                        } else {
+                                            txtDateExpected += " " + (hourOfDay + ":" + minute);
+                                        }
+                                        txt_orderDateExpected.setText(txtDateExpected);
+                                    }
+                                }, timeHour, timeMinute, true);
+                        timePickerDialog.show();
+                    }
+                });
+            }
+        });
+
         btn_updateOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.GONE);
+                order.setCustomerName(txt_orderCustomerName.getText().toString());
+                order.setContactNumber(txt_orderContactNumber.getText().toString());
+                order.setLocation(txt_orderLocation.getText().toString());
+                order.setDateExpected(LocalDateTime.parse(txt_orderDateExpected.getText().toString(), dateTimeFormatter));
+                order.setDescription(txt_orderDescription.getText().toString());
                 service.UpdateOrder(order, new Service.VolleyResponseListener() {
                     @Override
                     public void onError(String message) {
                         Toast.makeText(ViewOrderActivity.this, "Could Not Update Order!!!", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onResponse(Object response) {
                         Toast.makeText(ViewOrderActivity.this, "Order Updated Successfully...", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                        Intent intent = new Intent(ViewOrderActivity.this, MainActivity.class);
+                        intent.putExtra("vendorId", vendorId);
+                        intent.putExtra("fragment", 0);
+                        startActivity(intent);
                         finish();
                     }
                 });
@@ -121,6 +208,7 @@ public class ViewOrderActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void RefreshOrderData() {
+        progressBar.setVisibility(View.VISIBLE);
         service.GetOrderByOrderId(orderId, new Service.OrderListener() {
             @Override
             public void onResponse(Order order) {
@@ -130,6 +218,7 @@ public class ViewOrderActivity extends AppCompatActivity {
                 txt_orderLocation.setText(order.getLocation());
                 txt_orderDateMade.setText(dateTimeFormatter.format(order.getDateMade()));
                 txt_orderDateExpected.setText(dateTimeFormatter.format(order.getDateExpected()));
+                txtDateExpected = dateTimeFormatter.format(order.getDateExpected());
                 txt_orderDescription.setText(order.getDescription());
                 for(int i = 0; i < statusList.size(); i++) {
                     if(order.getStatus().equals(statusList.get(i))) {
@@ -144,6 +233,8 @@ public class ViewOrderActivity extends AppCompatActivity {
                             service.GetProductByProductCode(orderedProduct.getProductCode(), new Service.ProductListener() {
                                 @Override
                                 public void onResponse(Product product) {
+                                    total += orderedProduct.getQuantity() * product.getSellingPrice();
+                                    txt_orderTotal.setText(new DecimalFormat("#.##").format(total));
                                     saleProductAdapter.getProductList().add(product);
                                     saleProductAdapter.getQuantityList().add(orderedProduct.getQuantity());
                                     saleProductAdapter.notifyDataSetChanged();
@@ -155,11 +246,13 @@ public class ViewOrderActivity extends AppCompatActivity {
                                 }
                             });
                         }
+                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
                     public void onError(String message) {
                         Toast.makeText(ViewOrderActivity.this, message, Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
             }
@@ -167,8 +260,19 @@ public class ViewOrderActivity extends AppCompatActivity {
             @Override
             public void onError(String message) {
                 Toast.makeText(ViewOrderActivity.this, message, Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(ViewOrderActivity.this, MainActivity.class);
+        intent.putExtra("vendorId", vendorId);
+        intent.putExtra("fragment", 0);
+        startActivity(intent);
+        finish();
     }
 
 }

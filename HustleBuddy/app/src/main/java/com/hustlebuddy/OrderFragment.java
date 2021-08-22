@@ -120,7 +120,7 @@ public class OrderFragment extends Fragment {
         btn_orderAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(view.getContext(), AddOrderActivity.class);
+                Intent intent = new Intent(context, AddOrderActivity.class);
                 intent.putExtra("vendorId", vendorId);
                 startActivity(intent);
                 getActivity().finish();
@@ -169,6 +169,7 @@ public class OrderFragment extends Fragment {
             @Override
             public void onError(String message) {
                 Toast.makeText(view.getContext(), "Could not load orders...", Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

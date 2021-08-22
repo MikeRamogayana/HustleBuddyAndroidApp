@@ -22,6 +22,7 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -45,6 +46,7 @@ public class AddOrderActivity extends AppCompatActivity {
 
     Service service;
 
+    ProgressBar progressBar;
     RecyclerView recyclerView;
 
     ArrayAdapter<String> productsAdapter;
@@ -90,6 +92,7 @@ public class AddOrderActivity extends AppCompatActivity {
 
         productNameList.add("Select Product");
 
+        progressBar = findViewById(R.id.progress_add_order);
         txt_orderCustomerName = findViewById(R.id.txt_add_orderCustomerName);
         txt_orderContactNumber = findViewById(R.id.txt_add_orderContactNumber);
         txt_orderLocation = findViewById(R.id.txt_add_orderLocation);
@@ -245,14 +248,20 @@ public class AddOrderActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 try {
+                    if(saleProductAdapter.getItemCount() == 0) {
+                        Toast.makeText(AddOrderActivity.this, "Not products selected!!!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     Order order = new Order(0, vendorId, txt_orderCustomerName.getText().toString(),
                             txt_orderContactNumber.getText().toString(), txt_orderLocation.getText().toString(),
                             "pending", LocalDateTime.now(), LocalDateTime.parse(txt_orderDate.getText().toString() + " " + txt_orderTime.getText().toString(),
                             DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), txt_orderDescription.getText().toString());
+                    progressBar.setVisibility(View.VISIBLE);
                     service.CreateOrder(order, new Service.VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
                             Toast.makeText(AddOrderActivity.this, "Could not create order", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
                         }
 
                         @Override
@@ -277,6 +286,7 @@ public class AddOrderActivity extends AppCompatActivity {
                                                     }
                                                 });
                                             }
+                                            progressBar.setVisibility(View.GONE);
                                             Toast.makeText(AddOrderActivity.this, "Order created successfully...", Toast.LENGTH_SHORT).show();
                                             Intent intent = new Intent(AddOrderActivity.this, MainActivity.class);
                                             intent.putExtra("vendorId", vendorId);
@@ -288,6 +298,7 @@ public class AddOrderActivity extends AppCompatActivity {
                                         @Override
                                         public void onError(String message) {
                                             Toast.makeText(AddOrderActivity.this, "Could not create!!!", Toast.LENGTH_SHORT).show();
+                                            progressBar.setVisibility(View.GONE);
                                         }
                                     });
                         }
@@ -299,16 +310,6 @@ public class AddOrderActivity extends AppCompatActivity {
         });
 
         GetProducts();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(AddOrderActivity.this, MainActivity.class);
-        intent.putExtra("vendorId", vendorId);
-        intent.putExtra("fragment", 0);
-        startActivity(intent);
-        finish();
     }
 
     private void GetProducts() {
@@ -329,5 +330,15 @@ public class AddOrderActivity extends AppCompatActivity {
                 Toast.makeText(AddOrderActivity.this, "Could not fetch products!!!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(AddOrderActivity.this, MainActivity.class);
+        intent.putExtra("vendorId", vendorId);
+        intent.putExtra("fragment", 0);
+        startActivity(intent);
+        finish();
     }
 }

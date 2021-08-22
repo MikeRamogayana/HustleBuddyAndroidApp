@@ -1,231 +1,234 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ViewOrderActivity">
+    android:orientation="vertical">
 
-    <TableRow
-        android:id="@+id/tableRow"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableLayout">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView21"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:text="Product"
-            android:textAlignment="center"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textView22"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:text="Quantity"
-            android:textAlignment="center"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/textView23"
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:text="Sub Total"
-            android:textAlignment="center"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-    </TableRow>
-
-    <Button
-        android:id="@+id/btn_orderUpdate"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
-        android:text="Update Order"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TableLayout
-        android:id="@+id/tableLayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <TableRow
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp">
+            tools:context=".ViewOrderActivity">
+
+            <Button
+                android:id="@+id/btn_orderUpdate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                android:text="Update Order"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TableLayout
+                android:id="@+id/tableLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp">
+
+                    <EditText
+                        android:id="@+id/txt_view_orderCustomerName"
+                        android:layout_width="390dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Customer Name"
+                        android:inputType="textPersonName"
+                        android:textAlignment="textStart"
+                        android:textSize="16sp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp">
+
+                    <EditText
+                        android:id="@+id/txt_view_orderContactNumber"
+                        android:layout_width="390dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Phone"
+                        android:inputType="number"
+                        android:textAlignment="textStart"
+                        android:textSize="16sp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp">
+
+                    <EditText
+                        android:id="@+id/txt_view_orderLocation"
+                        android:layout_width="390dp"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:gravity="start|top"
+                        android:hint="Address"
+                        android:inputType="textMultiLine"
+                        android:minLines="2"
+                        android:textAlignment="textStart"
+                        android:textSize="16sp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:background="@drawable/edittext_border">
+
+                    <Spinner
+                        android:id="@+id/spinner_view_orderStatus"
+                        android:layout_width="390dp"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp" />
+
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp">
+
+                    <TextView
+                        android:id="@+id/txt_view_orderTimeMade"
+                        android:layout_width="390dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edittext_border"
+                        android:hint="yyyy-mm-dd hh:mm"
+                        android:paddingLeft="5dp"
+                        android:textAlignment="textStart"
+                        android:textSize="16sp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp">
+
+                    <TextView
+                        android:id="@+id/txt_view_orderTimeExpected"
+                        android:layout_width="390dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/edittext_border"
+                        android:hint="yyyy-mm-dd hh:mm"
+                        android:paddingLeft="5dp"
+                        android:textAlignment="textStart"
+                        android:textSize="16sp" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:gravity="top">
+
+                    <EditText
+                        android:id="@+id/txt_view_orderDescription"
+                        android:layout_width="390dp"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:gravity="start|top"
+                        android:hint="Description"
+                        android:inputType="textMultiLine"
+                        android:minLines="2"
+                        android:textAlignment="textStart"
+                        android:textSize="16sp" />
+
+                </TableRow>
+            </TableLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_orderOrderedProducts"
+                android:layout_width="0dp"
+                android:layout_height="305dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                app:layout_constraintBottom_toTopOf="@+id/tableRow5"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView21">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <TableRow
+                android:id="@+id/tableRow5"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittext_border"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
+                android:padding="5dp"
+                app:layout_constraintBottom_toTopOf="@+id/btn_orderUpdate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="128dp"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="128dp"
+                    android:layout_height="wrap_content"
+                    android:text="Total: R "
+                    android:textAlignment="textEnd"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txt_orderTotal"
+                    android:layout_width="128dp"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="center"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </TableRow>
 
             <TextView
-                android:id="@+id/textView7"
-                android:layout_width="150dp"
+                android:id="@+id/textView21"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Customer"
-                android:textSize="16sp" />
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="15dp"
+                android:text="Ordered Products"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
-            <TextView
-                android:id="@+id/txt_view_orderCustomerName"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textSize="16sp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp">
-
-            <TextView
-                android:id="@+id/textView10"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:text="Contact"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/txt_view_orderContactNumber"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textSize="16sp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp">
-
-            <TextView
-                android:id="@+id/textView12"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:text="Location"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/txt_view_orderLocation"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textSize="16sp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp">
-
-            <TextView
-                android:id="@+id/textView14"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:text="Status"
-                android:textSize="16sp" />
-
-            <Spinner
-                android:id="@+id/spinner_view_orderStatus"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content" />
-
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp">
-
-            <TextView
-                android:id="@+id/textView16"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:text="Time Made"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/txt_view_orderTimeMade"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textSize="16sp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="5dp">
-
-            <TextView
-                android:id="@+id/textView18"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:text="Time Expected"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/txt_view_orderTimeExpected"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:text="TextView"
-                android:textSize="16sp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="top"
-            android:padding="5dp">
-
-            <TextView
-                android:id="@+id/textView19"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:text="Description"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/txt_view_orderDescription"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:ems="10"
-                android:gravity="start|top"
-                android:inputType="textMultiLine"
-                android:minLines="3"
-                android:textAlignment="textStart"
-                android:textSize="16sp" />
-
-        </TableRow>
-    </TableLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_orderOrderedProducts"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="5dp"
-        app:layout_constraintBottom_toTopOf="@+id/btn_orderUpdate"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableRow" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <ProgressBar
+        android:id="@+id/progress_view_order"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
+</RelativeLayout>

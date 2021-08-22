@@ -49,7 +49,8 @@
             android:paddingTop="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_createSale"></lecho.lib.hellocharts.view.ColumnChartView>
+            app:layout_constraintTop_toBottomOf="@+id/btn_createSale"
+            android:background="@drawable/edittext_border"/>
 
         <TextView
             android:id="@+id/textView"
@@ -65,50 +66,12 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/chart_saleBarGraph" />
 
-        <TableRow
-            android:id="@+id/tableRow"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:textAlignment="center"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView">
-
-            <TextView
-                android:id="@+id/textView21"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:text="Product"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textView22"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:text="Quantity"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textView23"
-                android:layout_width="130dp"
-                android:layout_height="wrap_content"
-                android:text="Sub Total"
-                android:textAlignment="center"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </TableRow>
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_recentSales"
             android:layout_width="386dp"
             android:layout_height="0dp"
             android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="10dp"
             android:clipToPadding="true"
@@ -116,7 +79,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tableRow" />
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,4 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="EditTextStyle" parent="@android:style/Widget.EditText">
+        <item name="android:background">@drawable/edittext_border</item>
+        <item name="android:padding">5dp</item>
+    </style>
+
     <!-- Base application theme. -->
     <style name="Theme.HustleBuddy" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="android:windowDisablePreview">true</item>
@@ -14,6 +20,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="editTextStyle">@style/EditTextStyle</item>
 
     </style>
 

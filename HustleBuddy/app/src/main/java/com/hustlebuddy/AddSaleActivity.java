@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
@@ -38,6 +39,7 @@ public class AddSaleActivity extends AppCompatActivity {
 
     Service service;
 
+    ProgressBar progressBar;
     Button btnCreateProduct;
     TableLayout tableAddProduct;
     Button btnAddProduct;
@@ -77,6 +79,7 @@ public class AddSaleActivity extends AppCompatActivity {
         vendorId = intent.getIntExtra("vendorId",0);
         service = new Service(this);
 
+        progressBar = findViewById(R.id.progress_add_sale);
         btnCreateProduct = findViewById(R.id.btn_addSaleCreateProduct);
         tableAddProduct = findViewById(R.id.table_addSaleAddProduct);
         btnAddProduct = findViewById(R.id.btn_addSaleAddProduct);
@@ -182,13 +185,19 @@ public class AddSaleActivity extends AppCompatActivity {
         btnAddSale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(saleProductAdapter.getItemCount() == 0) {
+                    Toast.makeText(AddSaleActivity.this, "Not products selected!!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 for(int i = 0; i < saleProductAdapter.getItemCount(); i++) {
                     Sale sale = new Sale(0, saleProductAdapter.getProductList().get(i).getProductCode(),
                             saleProductAdapter.getQuantityList().get(i), stock.getLocation(), LocalDateTime.now(), vendorId);
+                    progressBar.setVisibility(View.VISIBLE);
                     service.CreateSale(sale, stock.getStockId(), new Service.VolleyResponseListener() {
                         @Override
                         public void onError(String message) {
                             Toast.makeText(AddSaleActivity.this, "Could not create sale!!!", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
                         }
 
                         @Override
@@ -199,6 +208,7 @@ public class AddSaleActivity extends AppCompatActivity {
 
                                 Intent intent = new Intent(AddSaleActivity.this, MainActivity.class);
                                 intent.putExtra("vendorId", vendorId);
+                                progressBar.setVisibility(View.GONE);
                                 startActivity(intent);
                                 finish();
                             }

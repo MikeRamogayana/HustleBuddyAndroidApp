@@ -1,6 +1,7 @@
 package com.hustlebuddy.adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -20,7 +21,6 @@ import com.hustlebuddy.ViewOrderActivity;
 import com.hustlebuddy.model.Order;
 
 import java.time.format.DateTimeFormatter;
-import java.util.ConcurrentModificationException;
 import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
@@ -38,7 +38,7 @@ public class OrdersRecyclerAdapter extends RecyclerView.Adapter<OrdersRecyclerAd
     @NonNull
     @Override
     public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_order_card, null);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_order_card, null);
         OrderViewHolder orderViewHolder = new OrderViewHolder(view);
         return orderViewHolder;
     }
@@ -62,7 +62,9 @@ public class OrdersRecyclerAdapter extends RecyclerView.Adapter<OrdersRecyclerAd
             public void onClick(View v) {
                 Intent intent = new Intent(context, ViewOrderActivity.class);
                 intent.putExtra("orderId", orderList.get(position).getOrderId());
+                intent.putExtra("vendorId", orderList.get(position).getVendorId());
                 context.startActivity(intent);
+                ((Activity) context).finish();
             }
         });
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -15,46 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context=".AddOrderActivity">
-
-            <TableRow
-                android:id="@+id/tableRow"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginEnd="10dp"
-                android:textAlignment="center"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear_addProduct">
-
-                <TextView
-                    android:id="@+id/textView21"
-                    android:layout_width="130dp"
-                    android:layout_height="wrap_content"
-                    android:text="Product"
-                    android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textView22"
-                    android:layout_width="130dp"
-                    android:layout_height="wrap_content"
-                    android:text="Quantity"
-                    android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/textView23"
-                    android:layout_width="130dp"
-                    android:layout_height="wrap_content"
-                    android:text="Sub Total"
-                    android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-            </TableRow>
 
             <Button
                 android:id="@+id/btn_orderAdd"
@@ -74,7 +34,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginEnd="10dp"
                 android:hint="Customer Name"
                 android:textSize="16sp"
@@ -87,6 +47,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 android:hint="Contact Number"
                 android:inputType="number"
@@ -100,6 +61,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 android:hint="Location"
                 android:textSize="16sp"
@@ -113,6 +75,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="70dp"
                 android:editable="false"
                 android:hint="HH:mm"
@@ -127,6 +90,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
                 android:ems="10"
                 android:gravity="start|top"
@@ -141,13 +105,13 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_add_orderOrderedProducts"
                 android:layout_width="0dp"
-                android:layout_height="330dp"
+                android:layout_height="385dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 app:layout_constraintBottom_toTopOf="@+id/btn_orderAdd"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tableRow" />
+                app:layout_constraintTop_toBottomOf="@+id/linear_addProduct" />
 
             <Button
                 android:id="@+id/btn_add_orderAddProduct"
@@ -167,6 +131,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="70dp"
                 android:editable="false"
                 android:hint="yyyy-mm-dd"
@@ -179,18 +144,24 @@
                 android:id="@+id/img_add_orderDate"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
                 app:layout_constraintBottom_toTopOf="@+id/txt_add_orderTime"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@+id/txt_add_orderDate"
                 app:layout_constraintTop_toBottomOf="@+id/txt_add_orderLocation"
+                app:layout_constraintVertical_bias="1.0"
                 app:srcCompat="@drawable/ic_baseline_date_range_24" />
 
             <ImageView
                 android:id="@+id/img_add_orderTime"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
+                android:layout_marginTop="5dp"
                 android:layout_marginEnd="10dp"
+                android:layout_marginBottom="5dp"
                 app:layout_constraintBottom_toTopOf="@+id/txt_add_orderDescription"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/txt_add_orderTime"
@@ -262,4 +233,12 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
-</LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_add_order"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_centerInParent="true"
+        android:visibility="invisible" />
+</RelativeLayout>
