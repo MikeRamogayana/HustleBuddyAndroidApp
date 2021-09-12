@@ -14,15 +14,17 @@ import com.hustlebuddy.R;
 import com.hustlebuddy.model.DailyExpense;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class ExpenseAdapter extends RecyclerView.Adapter<ExpenseAdapter.ExpenseHolder> {
 
     List<DailyExpense> dailyExpenseList = new ArrayList<>();
 
-    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+    DecimalFormat decimalFormat = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.UK));
 
     public ExpenseAdapter() {
     }

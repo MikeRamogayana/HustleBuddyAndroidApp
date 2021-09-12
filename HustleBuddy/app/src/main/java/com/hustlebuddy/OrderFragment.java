@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.hustlebuddy.adapter.OrdersRecyclerAdapter;
+import com.hustlebuddy.adapter.OrderAdapter;
 import com.hustlebuddy.controller.Service;
 import com.hustlebuddy.model.Order;
 
@@ -41,7 +41,7 @@ public class OrderFragment extends Fragment {
     Spinner spinnerStatus;
     ArrayAdapter<String> arrayAdapter;
     RecyclerView recyclerView;
-    OrdersRecyclerAdapter ordersRecyclerAdapter;
+    OrderAdapter orderAdapter;
     LinearLayoutManager linearLayoutManager;
     TextView txtCancelled;
     TextView txtPending;
@@ -117,8 +117,8 @@ public class OrderFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
 
-        ordersRecyclerAdapter = new OrdersRecyclerAdapter(view.getContext(), orderList);
-        recyclerView.setAdapter(ordersRecyclerAdapter);
+        orderAdapter = new OrderAdapter(view.getContext(), orderList);
+        recyclerView.setAdapter(orderAdapter);
 
         btn_orderAdd.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,11 +162,11 @@ public class OrderFragment extends Fragment {
                         return o2.getDateMade().compareTo(o1.getDateMade());
                     }
                 });
-                int size = ordersRecyclerAdapter.getItemCount();
-                ordersRecyclerAdapter.getOrderList().clear();
-                ordersRecyclerAdapter.notifyItemRangeRemoved(0, size);
-                ordersRecyclerAdapter.setOrderList(orderList);
-                ordersRecyclerAdapter.notifyItemRangeInserted(0, orderList.size());
+                int size = orderAdapter.getItemCount();
+                orderAdapter.getOrderList().clear();
+                orderAdapter.notifyItemRangeRemoved(0, size);
+                orderAdapter.setOrderList(orderList);
+                orderAdapter.notifyItemRangeInserted(0, orderList.size());
                 progressBar.setVisibility(View.GONE);
             }
 

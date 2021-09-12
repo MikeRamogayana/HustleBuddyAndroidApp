@@ -13,6 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HustleBuddy">
         <activity
+            android:name=".ProductExpenseActivity"
+            android:exported="true"
+            android:label="Product Expenses" />
+        <activity
             android:name=".AuthenticationActivity"
             android:exported="true"
             android:label="@string/title_activity_authentication"

@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -39,47 +39,109 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <lecho.lib.hellocharts.view.ColumnChartView
-            android:id="@+id/chart_saleBarGraph"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_recentSales"
             android:layout_width="0dp"
-            android:layout_height="250dp"
+            android:layout_height="0dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
-            android:paddingTop="15dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/primary_boarder"
+            android:clipToPadding="true"
+            android:paddingBottom="5dp"
+            app:layout_constraintBottom_toTopOf="@+id/tableRow10"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_createSale"
-            android:background="@drawable/primary_boarder"/>
+            app:layout_constraintTop_toBottomOf="@+id/txt_viewSaleDate" />
 
-        <TextView
-            android:id="@+id/textView"
+        <TableRow
+            android:id="@+id/tableRow7"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
-            android:text="Today sales"
-            android:textAlignment="textStart"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:background="@drawable/primary_boarder"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/chart_saleBarGraph" />
+            app:layout_constraintTop_toBottomOf="@+id/btn_createSale">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_recentSales"
-            android:layout_width="386dp"
-            android:layout_height="0dp"
+            <Spinner
+                android:id="@+id/spn_searchProductExpenseCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5px"
+                android:layout_marginBottom="5px"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp" />
+        </TableRow>
+
+        <EditText
+            android:id="@+id/txt_viewSaleDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginBottom="10dp"
-            android:clipToPadding="true"
-            android:paddingBottom="5dp"
+            android:editable="false"
+            android:hint="yyyy-mm-dd"
+            android:paddingStart="50dp"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tableRow7" />
+
+        <ImageView
+            android:id="@+id/img_viewSaleDate"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_viewSaleDate"
+            app:layout_constraintEnd_toEndOf="@+id/txt_viewSaleDate"
+            app:layout_constraintTop_toTopOf="@+id/txt_viewSaleDate"
+            app:srcCompat="@drawable/ic_baseline_date_range_24" />
+
+        <TableRow
+            android:id="@+id/tableRow10"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
+            android:background="@drawable/primary_boarder"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/txt_viewSaleCash"
+                android:layout_width="195dp"
+                android:layout_height="wrap_content"
+                android:background="#9987FA00"
+                android:text="CASH"
+                android:textAlignment="center"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/txt_viewSaleCredit"
+                android:layout_width="195dp"
+                android:layout_height="wrap_content"
+                android:background="#9973D7FF"
+                android:text="CREDIT"
+                android:textAlignment="center"
+                android:textSize="16sp" />
+        </TableRow>
+
+        <ImageView
+            android:id="@+id/img_viewSaleDateReset"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_viewSaleDate"
+            app:layout_constraintStart_toStartOf="@+id/txt_viewSaleDate"
+            app:layout_constraintTop_toTopOf="@+id/txt_viewSaleDate"
+            app:srcCompat="@drawable/ic_baseline_restore_24" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

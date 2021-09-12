@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="5dp"
+    app:cardCornerRadius="4dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/primary_boarder"
+        android:orientation="vertical">
+
+        <TableRow
+            android:id="@+id/tableRow16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#724FC3F7"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="197dp"
+                android:layout_height="wrap_content"
+                android:text="Expense For"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="197dp"
+                android:layout_height="wrap_content"
+                android:text="Product Name"
+                android:textAlignment="center"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow17"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/txt_viewProductExpenseCode"
+                android:layout_width="197dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/txt_viewProductExpenseName"
+                android:layout_width="197dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textSize="16sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#334FC3F7"
+            android:padding="5dp">
+
+            <TextView
+                android:id="@+id/txt_viewProductExpenseDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="10dp"
+                android:text="Date: 2021-09-11 22:00"
+                android:textAlignment="textEnd"
+                android:textStyle="bold|italic" />
+        </TableRow>
+
+        <LinearLayout
+            android:id="@+id/layout_viewProductExpenseDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TableRow
+                android:id="@+id/tableRow19"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#154FC3F7"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/textView22"
+                    android:layout_width="197dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:text="Cost" />
+
+                <TextView
+                    android:id="@+id/txt_viewProductExpenseCost"
+                    android:layout_width="190dp"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="20dp"
+                    android:text="R 0.00"
+                    android:textAlignment="textEnd" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/textView34"
+                    android:layout_width="197dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:text="Quantity" />
+
+                <TextView
+                    android:id="@+id/txt_viewProductExpenseQuantity"
+                    android:layout_width="190dp"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="20dp"
+                    android:text="R 0.00"
+                    android:textAlignment="textEnd" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow21"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#154FC3F7"
+                android:padding="5dp">
+
+                <TextView
+                    android:id="@+id/textView37"
+                    android:layout_width="197dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:text="Total" />
+
+                <TextView
+                    android:id="@+id/txt_viewProductExpenseTotal"
+                    android:layout_width="190dp"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="20dp"
+                    android:text="R 0.00"
+                    android:textAlignment="textEnd" />
+            </TableRow>
+
+            <Button
+                android:id="@+id/btn_viewProductExpenseDelete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:text="Delete" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/img_viewProductExpenseCollapseExpand"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#D3D3D3"
+            app:srcCompat="@drawable/ic_baseline_keyboard_arrow_down_24" />
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

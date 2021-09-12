@@ -1,15 +1,14 @@
 package com.hustlebuddy;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,14 +26,14 @@ public class RegisterFragment extends Fragment {
     Service service;
 
     ProgressBar progressBar;
-    TextView txtFirstName;
-    TextView txtLastName;
-    TextView txtCompanyName;
-    TextView txtAddress;
-    TextView txtContact;
-    TextView txtEmail;
-    TextView txtPassword;
-    TextView txtConfirm;
+    EditText txtFirstName;
+    EditText txtLastName;
+    EditText txtCompanyName;
+    EditText txtAddress;
+    EditText txtContact;
+    EditText txtEmail;
+    EditText txtPassword;
+    EditText txtConfirm;
     Button btnRegister;
 
     Context context;
@@ -94,34 +93,34 @@ public class RegisterFragment extends Fragment {
     }
 
     private boolean IsValid() {
-        if(ValidateFields(txtFirstName) && ValidateFields(txtLastName) && ValidateFields(txtCompanyName) &&
-                ValidateFields(txtAddress) && ValidateFields(txtPassword) && ValidateFields(txtConfirm) &&
-                ValidateFields(txtContact) && ValidateFields(txtEmail)) {
+        if(ValidateField(txtFirstName) && ValidateField(txtLastName) && ValidateField(txtCompanyName) &&
+                ValidateField(txtAddress) && ValidateField(txtPassword) && ValidateField(txtConfirm) &&
+                ValidateField(txtContact) && ValidateField(txtEmail)) {
             return true;
         }
         return false;
     }
 
-    private boolean ValidateFields(TextView textView) {
-        if(textView.getText().toString().length() < 3) {
-            textView.setBackgroundColor(Color.parseColor("#22FF0000"));
-            SetOnEdit(textView);
+    private boolean ValidateField(EditText editText) {
+        if(editText.getText().toString().length() < 3) {
+            editText.setBackgroundResource(R.drawable.error_border);
+            SetOnEdit(editText);
             return false;
         }
-        if(textView == txtConfirm && !textView.getText().toString().equals(txtPassword.getText().toString())) {
-            textView.setBackgroundColor(Color.parseColor("#22FF0000"));
+        if(editText == txtConfirm && !editText.getText().toString().equals(txtPassword.getText().toString())) {
+            editText.setBackgroundResource(R.drawable.error_border);
             Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show();
             return  false;
         }
         return true;
     }
 
-    private void SetOnEdit(TextView textView) {
-        textView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+    private void SetOnEdit(EditText editText) {
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus){
-                    v.setBackgroundColor(0);
+                    editText.setBackgroundResource(R.drawable.primary_boarder);
                 }
             }
         });

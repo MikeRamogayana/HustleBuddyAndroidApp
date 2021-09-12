@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hustlebuddy.R;
@@ -24,13 +25,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
-public class OrdersRecyclerAdapter extends RecyclerView.Adapter<OrdersRecyclerAdapter.OrderViewHolder> {
+public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
 
     private Context context;
     private List<Order> orderList;
     private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    public OrdersRecyclerAdapter(Context context, List<Order> orderList) {
+    public OrderAdapter(Context context, List<Order> orderList) {
         this.context = context;
         this.orderList = orderList;
     }
@@ -57,7 +58,7 @@ public class OrdersRecyclerAdapter extends RecyclerView.Adapter<OrdersRecyclerAd
         holder.txt_orderCustomerName.setText(orderList.get(position).getCustomerName());
         holder.txt_orderDateExpected.setText(dateTimeFormatter.format(orderList.get(position).getDateExpected()));
 
-        holder.tableRow.setOnClickListener(new View.OnClickListener() {
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ViewOrderActivity.class);
@@ -75,6 +76,7 @@ public class OrdersRecyclerAdapter extends RecyclerView.Adapter<OrdersRecyclerAd
     }
 
     public class OrderViewHolder extends RecyclerView.ViewHolder {
+        public CardView cardView;
         public TableRow tableRow;
         public TextView txt_orderId;
         public TextView txt_orderCustomerName;
@@ -82,7 +84,8 @@ public class OrdersRecyclerAdapter extends RecyclerView.Adapter<OrdersRecyclerAd
 
         public OrderViewHolder(@NonNull View itemView) {
             super(itemView);
-            tableRow = itemView.findViewById(R.id.card_order);
+            cardView = itemView.findViewById(R.id.card_order);
+            tableRow = itemView.findViewById(R.id.tablerow_view_order);
             txt_orderId = itemView.findViewById(R.id.txt_orderId);
             txt_orderCustomerName = itemView.findViewById(R.id.txt_orderCustomerName);
             txt_orderDateExpected = itemView.findViewById(R.id.txt_orderDateExpected);

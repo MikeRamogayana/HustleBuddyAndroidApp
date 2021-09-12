@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true">
+
+        <TableRow
+            android:id="@+id/tableRow7"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/primary_boarder"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_addProductExpense">
+
+            <Spinner
+                android:id="@+id/spn_searchProductExpenseCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5px"
+                android:layout_marginBottom="5px"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp" />
+
+        </TableRow>
+
+        <EditText
+            android:id="@+id/txt_searchProductExpenseDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:editable="false"
+            android:hint="yyyy-mm-dd"
+            android:paddingStart="50dp"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tableRow7" />
+
+        <ImageView
+            android:id="@+id/img_searchProductExpenseResetDate"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_searchProductExpenseDate"
+            app:layout_constraintStart_toStartOf="@+id/txt_searchProductExpenseDate"
+            app:layout_constraintTop_toTopOf="@+id/txt_searchProductExpenseDate"
+            app:srcCompat="@drawable/ic_baseline_restore_24" />
+
+        <Spinner
+            android:id="@+id/spinner_viewSaleCashOrCredit2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp" />
+
+        <Button
+            android:id="@+id/btn_createProductExpense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:text="Add Product Expense"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_addProductExpense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_createProductExpense">
+
+            <TableRow
+                android:id="@+id/tableRow15"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/primary_boarder"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <Spinner
+                    android:id="@+id/spn_addProductExpenseProductCode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp" />
+            </TableRow>
+
+            <EditText
+                android:id="@+id/txt_addProductExpenseName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ems="10"
+                android:hint="Select/Enter Product Name"
+                android:inputType="textPersonName"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tableRow15" />
+
+            <Spinner
+                android:id="@+id/spn_addProductExpenseNameList"
+                android:layout_width="40dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_addProductExpenseName"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/txt_addProductExpenseName" />
+
+            <EditText
+                android:id="@+id/txt_addProductExpenseCost"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ems="10"
+                android:hint="Cost Per Unit"
+                android:inputType="numberDecimal"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_addProductExpenseName" />
+
+            <EditText
+                android:id="@+id/txt_addProductExpenseQuantity"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:ems="10"
+                android:hint="Quantity"
+                android:inputType="number"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_addProductExpenseCost" />
+
+            <Button
+                android:id="@+id/btn_addProductExpense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:text="Add"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_addProductExpenseSubTotal" />
+
+            <TextView
+                android:id="@+id/txt_addProductExpenseSubTotal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/primary_boarder"
+                android:padding="5dp"
+                android:text="Sub Total: R 0.00"
+                android:textAlignment="textEnd"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_addProductExpenseQuantity" />
+
+            <Button
+                android:id="@+id/btn_addProductExpenseClose"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Close"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_addProductExpense" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_ProductExpenses"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="5dp"
+            android:clipToPadding="true"
+            android:paddingBottom="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/txt_searchProductExpenseDate">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <ImageView
+            android:id="@+id/img_searchProductExpenseDate"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="5dp"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_searchProductExpenseDate"
+            app:layout_constraintEnd_toEndOf="@+id/txt_searchProductExpenseDate"
+            app:layout_constraintTop_toTopOf="@+id/txt_searchProductExpenseDate"
+            app:srcCompat="@drawable/ic_baseline_date_range_24" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_prodExpense"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:visibility="invisible"
+        android:focusable="true"
+        android:layout_centerInParent="true" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_prodExpRefresh"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:visibility="invisible"
+        android:focusable="true"
+        android:layout_centerInParent="true"
+        app:maxImageSize="75dp"
+        app:srcCompat="@drawable/ic_baseline_refresh_24" />
+
+</RelativeLayout>

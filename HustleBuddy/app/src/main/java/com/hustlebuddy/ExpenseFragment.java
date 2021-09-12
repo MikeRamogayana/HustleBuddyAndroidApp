@@ -1,12 +1,14 @@
 package com.hustlebuddy;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,8 +28,10 @@ import com.hustlebuddy.model.DailyExpense;
 import com.hustlebuddy.model.DailyStock;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Locale;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class ExpenseFragment extends Fragment {
@@ -36,10 +40,11 @@ public class ExpenseFragment extends Fragment {
 
     ProgressBar progressBar;
     FloatingActionButton btnRefresh;
+    Button btnViewProductExpense;
     ConstraintLayout layout;
-    TextView txtLunch;
-    TextView txtTransport;
-    TextView txtOther;
+    EditText txtLunch;
+    EditText txtTransport;
+    EditText txtOther;
     Button btnUpdate;
     RecyclerView recyclerView;
 
@@ -50,7 +55,7 @@ public class ExpenseFragment extends Fragment {
     Context context;
     DailyExpense dailyExpense;
 
-    DecimalFormat decimalFormat = new DecimalFormat("#.##");
+    DecimalFormat decimalFormat = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.UK));
 
     public ExpenseFragment(Context context, int vendorId) {
         this.context = context;
@@ -65,6 +70,7 @@ public class ExpenseFragment extends Fragment {
 
         progressBar = view.findViewById(R.id.progress_expense);
         btnRefresh = view.findViewById(R.id.btn_expenseRefresh);
+        btnViewProductExpense = view.findViewById(R.id.btn_viewProductExpenses);
         layout = view.findViewById(R.id.expense_fragment);
         txtLunch = view.findViewById(R.id.txt_expenseLunch);
         txtTransport = view.findViewById(R.id.txt_expenseTransport);
@@ -81,29 +87,38 @@ public class ExpenseFragment extends Fragment {
             }
         });
 
+        btnViewProductExpense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(view.getContext(), ProductExpenseActivity.class);
+                intent.putExtra("vendorId", vendorId);
+                startActivity(intent);
+            }
+        });
+
         btnUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try{
-                    dailyExpense.setLunch(Double.parseDouble(txtLunch.getText().toString()));
-                    dailyExpense.setTransport(Double.parseDouble(txtTransport.getText().toString()));
-                    dailyExpense.setOther(Double.parseDouble(txtOther.getText().toString()));
-                    progressBar.setVisibility(View.VISIBLE);
-                    service.UpdateDailyExpense(dailyExpense, new Service.VolleyResponseListener() {
-                        @Override
-                        public void onError(String message) {
-                            Toast.makeText(context, "Could not update expenses!!!", Toast.LENGTH_SHORT).show();
-                        }
-
-                        @Override
-                        public void onResponse(Object response) {
-                            Toast.makeText(context, "Expenses updated successfully...", Toast.LENGTH_SHORT).show();
-                            UpdateRecyclerView();
-                        }
-                    });
-                } catch (Exception e) {
-                    Toast.makeText(context, "Check your fields!!!", Toast.LENGTH_SHORT).show();
+                if(!(ValidateField(txtLunch) && ValidateField(txtTransport) && ValidateField(txtOther))) {
+                    Toast.makeText(context, "Check field highlighted in red!!!", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                dailyExpense.setLunch(Double.parseDouble(txtLunch.getText().toString()));
+                dailyExpense.setTransport(Double.parseDouble(txtTransport.getText().toString()));
+                dailyExpense.setOther(Double.parseDouble(txtOther.getText().toString()));
+                progressBar.setVisibility(View.VISIBLE);
+                service.UpdateDailyExpense(dailyExpense, new Service.VolleyResponseListener() {
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(context, "Could not update expenses!!!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onResponse(Object response) {
+                        Toast.makeText(context, "Expenses updated successfully...", Toast.LENGTH_SHORT).show();
+                        UpdateRecyclerView();
+                    }
+                });
             }
         });
 
@@ -187,6 +202,26 @@ public class ExpenseFragment extends Fragment {
                 Toast.makeText(context, "Could not load monthly stocks!!!", Toast.LENGTH_SHORT).show();
                 btnRefresh.setVisibility(View.VISIBLE);
                 progressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private boolean ValidateField(EditText editText) {
+        if(editText.getText().toString().equals("")) {
+            editText.setBackgroundResource(R.drawable.error_border);
+            SetOnEdit(editText);
+            return false;
+        }
+        return true;
+    }
+
+    private void SetOnEdit(EditText editText) {
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    editText.setBackgroundResource(R.drawable.primary_boarder);
+                }
             }
         });
     }

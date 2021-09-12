@@ -13,12 +13,14 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
+import com.hustlebuddy.model.CreditSale;
 import com.hustlebuddy.model.DailyExpense;
 import com.hustlebuddy.model.DailyStock;
 import com.hustlebuddy.model.EmailMessage;
 import com.hustlebuddy.model.Order;
 import com.hustlebuddy.model.OrderedProduct;
 import com.hustlebuddy.model.Product;
+import com.hustlebuddy.model.ProductExpense;
 import com.hustlebuddy.model.Sale;
 import com.hustlebuddy.model.TradingStock;
 import com.hustlebuddy.model.Vendor;
@@ -41,6 +43,7 @@ public class Service {
     public static final String orderUrl = "https://hustlebuddy.azurewebsites.net/api/order/";
     public static final String saleUrl = "https://hustlebuddy.azurewebsites.net/api/sale/";
     public static final String productUrl = "https://hustlebuddy.azurewebsites.net/api/product/";
+    public static final String productExpenseUrl = "https://hustlebuddy.azurewebsites.net/api/productexpense/";
 
     private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss");
 
@@ -604,10 +607,15 @@ public class Service {
     }
 
     //------Sale Management------//
+    public interface  SaleListener {
+        void onResponse(Sale sale);
+        void onError(String message);
+    }
     public interface SalesListener{
         void onResponse(ArrayList<Sale> sales);
         void onError(String message);
     }
+
     // Create Sale
     public void CreateSale(Sale sale, int stockId, VolleyResponseListener volleyListener){
         String url = saleUrl + "create/" + stockId;
@@ -618,10 +626,55 @@ public class Service {
         }
     }
 
+    // Get Recent Sale
+    public void GetRecentSale(int vendorId, SaleListener saleListener) {
+        String url = saleUrl + "get/recent/" + vendorId;
+        GetSale(url, saleListener);
+    }
+
+    // Search CreditSale By Name Sales By Name
+    public void SearchCreditSalesByName(int vendorId, String text, SalesListener salesListener) {
+        String url = saleUrl + "get/search/" + vendorId + "/" + text;
+        GetSales(url, salesListener);
+    }
+
+    // Get Sales By Date
+    public void GetSalesByDate(int vendorId, LocalDateTime date, SalesListener salesListener){
+        String url = saleUrl + "get/date/" + vendorId + "/" + date;
+        GetSales(url, salesListener);
+    }
+
     // Get Sales For Today
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void GetDailySales(int vendorId, SalesListener salesListener){
         String url = saleUrl + "get/date/" + vendorId + "/" + LocalDateTime.now();
+        GetSales(url, salesListener);
+    }
+
+    // For sending request
+    private void GetSale(String url, SaleListener saleListener) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            saleListener.onResponse(new Sale(response));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        saleListener.onError(error.getMessage());
+                    }
+                });
+        DataComSingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+    // For sending request
+    private void GetSales(String url, SalesListener salesListener) {
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONArray>() {
                     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -708,4 +761,165 @@ public class Service {
         DataComSingleton.getInstance(context).addToRequestQueue(request);
     }
 
+    //-------ProductExpense Management-------//
+    public interface ProductExpenseListener {
+        void onResponse(ProductExpense productExpense);
+        void onError(String message);
+    }
+    public interface ProductExpensesListener {
+        void onResponse(ArrayList<ProductExpense> productExpenses);
+        void onError(String message);
+    }
+
+    public void CreateProductExpense(ProductExpense productExpense, VolleyResponseListener responseListener) {
+        String url = productExpenseUrl + "create";
+        try {
+            StringPostRequest(url, ProductExpense.toJSONObject(productExpense), responseListener);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void DeleteProductExpense(int productExpenseId, VolleyResponseListener responseListener) {
+        String url = productExpenseUrl + "delete/" + productExpenseId;
+        StringDeleteRequest(url, responseListener);
+    }
+
+    public void GetProductExpenseById(int productExpenseId, ProductExpenseListener productExpenseListener) {
+        String url = productExpenseUrl + "get/productExpenseId/" + productExpenseId;
+        GetProductExpense(url, productExpenseListener);
+    }
+
+    public void GetProductExpensesByProductCode(String productCode, ProductExpensesListener productExpensesListener) {
+        String url = productExpenseUrl + "get/productCode/" + productCode;
+        GetProductExpenses(url, productExpensesListener);
+    }
+
+    public void GetProductExpensesByVendorID(int vendorId, ProductExpensesListener productExpensesListener) {
+        String url = productExpenseUrl + "get/vendorId/" + vendorId;
+        GetProductExpenses(url, productExpensesListener);
+    }
+
+    public void GetProductExpensesByDate(int vendorId, LocalDateTime date, ProductExpensesListener productExpensesListener) {
+        String url = productExpenseUrl + "get/date/" + vendorId + "/" + date;
+        GetProductExpenses(url, productExpensesListener);
+    }
+
+    private void GetProductExpense(String url, ProductExpenseListener listener) {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            listener.onResponse(new ProductExpense(response));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.onError(error.getMessage());
+                    }
+                });
+        DataComSingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+    private void GetProductExpenses(String url, ProductExpensesListener listener) {
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        ArrayList<ProductExpense> productExpenses = new ArrayList<>();
+                        for(int i = 0; i < response.length(); i++) {
+                            try {
+                                productExpenses.add(new ProductExpense(response.getJSONObject(i)));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        listener.onResponse(productExpenses);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.onError(error.getMessage());
+                    }
+                });
+        DataComSingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+    //-------Finance Management------//
+    public interface CreditSaleListener {
+        void onResponse(CreditSale creditSale);
+        void onError(String message);
+    }
+
+    // Create CreditSale
+    public void CreateCreditSale(CreditSale creditSale, VolleyResponseListener responseListener) {
+        String url = baseUrl + "credit/create";
+        try {
+            StringPostRequest(url, CreditSale.toJSONObject(creditSale), responseListener);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Update CreditSale
+    public void UpdateCreditSale(CreditSale creditSale, VolleyResponseListener responseListener) {
+        String url = baseUrl + "credit/update";
+        try {
+            StringPutRequest(url, CreditSale.toJSONObject(creditSale), responseListener);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Get CreditSale By SaleId
+    public void GetCreditSaleBySaleId(int saleId, CreditSaleListener creditSaleListener) {
+        String url = baseUrl + "credit/get/saleId/" + saleId;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            creditSaleListener.onResponse(new CreditSale(response));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        creditSaleListener.onError(error.getMessage());
+                    }
+                });
+        DataComSingleton.getInstance(context).addToRequestQueue(request);
+    }
+
+    // Get CreditSale By CreditId
+    public void GetCreditSaleByCreditId(int creditId, CreditSaleListener creditSaleListener) {
+        String url = baseUrl + "credit/get/creditId/" + creditId;
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            creditSaleListener.onResponse(new CreditSale(response));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        creditSaleListener.onError(error.getMessage());
+                    }
+                });
+        DataComSingleton.getInstance(context).addToRequestQueue(request);
+    }
 }

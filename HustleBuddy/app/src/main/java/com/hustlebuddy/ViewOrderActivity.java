@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -30,25 +31,27 @@ import com.hustlebuddy.model.OrderedProduct;
 import com.hustlebuddy.model.Product;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class ViewOrderActivity extends AppCompatActivity {
 
     ProgressBar progressBar;
     RecyclerView recyclerView;
-    TextView txt_orderCustomerName;
-    TextView txt_orderContactNumber;
-    TextView txt_orderLocation;
+    EditText txt_orderCustomerName;
+    EditText txt_orderContactNumber;
+    EditText txt_orderLocation;
     Spinner spinner_orderStatus;
     TextView txt_orderDateMade;
     TextView txt_orderDateExpected;
-    TextView txt_orderDescription;
+    EditText txt_orderDescription;
     Button btn_updateOrder;
     TextView txt_orderTotal;
 
@@ -56,7 +59,7 @@ public class ViewOrderActivity extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
 
     ArrayAdapter<String> arrayAdapter;
-    List<String> statusList = Arrays.asList(new String[]{"cancelled", "completed", "pending"});
+    List<String> statusList = Arrays.asList(new String[]{"Cancelled", "Completed", "Pending"});
 
     Service service;
 
@@ -69,6 +72,7 @@ public class ViewOrderActivity extends AppCompatActivity {
     private List<OrderedProduct> orderedProductList = new ArrayList<>();
     private List<Product> productList = new ArrayList<>();
 
+    DecimalFormat decimalFormat = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.UK));
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     @Override
@@ -160,12 +164,17 @@ public class ViewOrderActivity extends AppCompatActivity {
         btn_updateOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressBar.setVisibility(View.GONE);
+                if(!(ValidateField(txt_orderContactNumber) && ValidateField(txt_orderContactNumber) &&
+                ValidateField(txt_orderLocation) && ValidateField(txt_orderDescription))) {
+                    Toast.makeText(ViewOrderActivity.this, "Check field highlighted in red!!!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 order.setCustomerName(txt_orderCustomerName.getText().toString());
                 order.setContactNumber(txt_orderContactNumber.getText().toString());
                 order.setLocation(txt_orderLocation.getText().toString());
                 order.setDateExpected(LocalDateTime.parse(txt_orderDateExpected.getText().toString(), dateTimeFormatter));
                 order.setDescription(txt_orderDescription.getText().toString());
+                progressBar.setVisibility(View.VISIBLE);
                 service.UpdateOrder(order, new Service.VolleyResponseListener() {
                     @Override
                     public void onError(String message) {
@@ -190,7 +199,7 @@ public class ViewOrderActivity extends AppCompatActivity {
         spinner_orderStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                ViewOrderActivity.this.order.setStatus(statusList.get(position));
+                ViewOrderActivity.this.order.setStatus(statusList.get(position).toLowerCase());
             }
 
             @Override
@@ -213,8 +222,8 @@ public class ViewOrderActivity extends AppCompatActivity {
                 txt_orderCustomerName.setText(order.getCustomerName());
                 txt_orderContactNumber.setText(order.getContactNumber());
                 txt_orderLocation.setText(order.getLocation());
-                txt_orderDateMade.setText(dateTimeFormatter.format(order.getDateMade()));
-                txt_orderDateExpected.setText(dateTimeFormatter.format(order.getDateExpected()));
+                txt_orderDateMade.setText(("Created On: " + dateTimeFormatter.format(order.getDateMade())));
+                txt_orderDateExpected.setText(("Required On: " + dateTimeFormatter.format(order.getDateExpected())));
                 txtDateExpected = dateTimeFormatter.format(order.getDateExpected());
                 txt_orderDescription.setText(order.getDescription());
                 for(int i = 0; i < statusList.size(); i++) {
@@ -231,7 +240,7 @@ public class ViewOrderActivity extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Product product) {
                                     total += orderedProduct.getQuantity() * product.getSellingPrice();
-                                    txt_orderTotal.setText(new DecimalFormat("#.##").format(total));
+                                    txt_orderTotal.setText(("R " + decimalFormat.format(total)));
                                     saleProductAdapter.getProductList().add(product);
                                     saleProductAdapter.getQuantityList().add(orderedProduct.getQuantity());
                                     saleProductAdapter.notifyDataSetChanged();
@@ -270,6 +279,26 @@ public class ViewOrderActivity extends AppCompatActivity {
         intent.putExtra("fragment", 0);
         startActivity(intent);
         finish();
+    }
+
+    private boolean ValidateField(EditText editText) {
+        if(editText.getText().toString().length() < 3) {
+            editText.setBackgroundResource(R.drawable.error_border);
+            SetOnEdit(editText);
+            return false;
+        }
+        return true;
+    }
+
+    private void SetOnEdit(EditText editText) {
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    editText.setBackgroundResource(R.drawable.primary_boarder);
+                }
+            }
+        });
     }
 
 }

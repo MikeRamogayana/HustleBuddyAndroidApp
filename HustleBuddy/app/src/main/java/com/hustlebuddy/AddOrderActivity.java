@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -35,11 +36,13 @@ import com.hustlebuddy.model.OrderedProduct;
 import com.hustlebuddy.model.Product;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class AddOrderActivity extends AppCompatActivity {
@@ -53,17 +56,17 @@ public class AddOrderActivity extends AppCompatActivity {
     SaleProductAdapter saleProductAdapter;
     LinearLayoutManager linearLayoutManager;
 
-    TextView txt_orderCustomerName;
-    TextView txt_orderContactNumber;
-    TextView txt_orderLocation;
-    TextView txt_orderDate;
-    TextView txt_orderTime;
+    EditText txt_orderCustomerName;
+    EditText txt_orderContactNumber;
+    EditText txt_orderLocation;
+    EditText txt_orderDate;
+    EditText txt_orderTime;
     ImageView img_orderDate;
     ImageView img_orderTime;
-    TextView txt_orderDescription;
+    EditText txt_orderDescription;
     LinearLayout layout;
     Spinner spinnerAddProduct;
-    TextView txt_orderQuantity;
+    EditText txt_orderQuantity;
     TextView txt_orderSubTotal;
     Button btnBack;
     Button btnDone;
@@ -78,7 +81,7 @@ public class AddOrderActivity extends AppCompatActivity {
     int vendorId;
     Product product;
 
-    private DecimalFormat decimalFormat = new DecimalFormat("#.##");
+    DecimalFormat decimalFormat = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.UK));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -231,15 +234,15 @@ public class AddOrderActivity extends AppCompatActivity {
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    saleProductAdapter.getProductList().add(product);
-                    saleProductAdapter.getQuantityList().add(Integer.parseInt(txt_orderQuantity.getText().toString()));
-                    saleProductAdapter.notifyDataSetChanged();
-                    layout.setVisibility(View.GONE);
-                    Toast.makeText(AddOrderActivity.this, "Product added...", Toast.LENGTH_SHORT).show();
-                } catch (Exception e) {
-                    Toast.makeText(AddOrderActivity.this, "Could not add product!!!", Toast.LENGTH_SHORT).show();
+                if(!ValidateField(txt_orderQuantity)) {
+                    Toast.makeText(AddOrderActivity.this, "Quantity cannot be empty!!!", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                saleProductAdapter.getProductList().add(product);
+                saleProductAdapter.getQuantityList().add(Integer.parseInt(txt_orderQuantity.getText().toString()));
+                saleProductAdapter.notifyDataSetChanged();
+                layout.setVisibility(View.GONE);
+                Toast.makeText(AddOrderActivity.this, "Product added...", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -248,6 +251,12 @@ public class AddOrderActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 try {
+                    if(!(ValidateField(txt_orderCustomerName) && ValidateField(txt_orderContactNumber) &&
+                            ValidateField(txt_orderLocation) && ValidateField(txt_orderDate) &&
+                            ValidateField(txt_orderTime) && ValidateField(txt_orderDescription))) {
+                        Toast.makeText(AddOrderActivity.this, "Check the fields highlighted in red!!!", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     if(saleProductAdapter.getItemCount() == 0) {
                         Toast.makeText(AddOrderActivity.this, "Not products selected!!!", Toast.LENGTH_SHORT).show();
                         return;
@@ -270,6 +279,7 @@ public class AddOrderActivity extends AppCompatActivity {
                                     txt_orderContactNumber.getText().toString(), new Service.OrderListener() {
                                         @Override
                                         public void onResponse(Order order) {
+                                            int saleCount = saleProductAdapter.getItemCount();
                                             for(int i = 0; i < saleProductAdapter.getItemCount(); i++) {
                                                 OrderedProduct orderedProduct = new OrderedProduct(order.getOrderId(),
                                                         saleProductAdapter.getProductList().get(i).getProductCode(),
@@ -285,14 +295,18 @@ public class AddOrderActivity extends AppCompatActivity {
 
                                                     }
                                                 });
+                                                saleCount--;
+                                                if(saleCount == 0) {
+                                                    progressBar.setVisibility(View.GONE);
+                                                    Toast.makeText(AddOrderActivity.this, "Order created successfully...", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(AddOrderActivity.this, MainActivity.class);
+                                                    intent.putExtra("vendorId", vendorId);
+                                                    intent.putExtra("fragment", 0);
+                                                    startActivity(intent);
+                                                    finish();
+                                                }
                                             }
-                                            progressBar.setVisibility(View.GONE);
-                                            Toast.makeText(AddOrderActivity.this, "Order created successfully...", Toast.LENGTH_SHORT).show();
-                                            Intent intent = new Intent(AddOrderActivity.this, MainActivity.class);
-                                            intent.putExtra("vendorId", vendorId);
-                                            intent.putExtra("fragment", 0);
-                                            startActivity(intent);
-                                            finish();
+
                                         }
 
                                         @Override
@@ -340,5 +354,38 @@ public class AddOrderActivity extends AppCompatActivity {
         intent.putExtra("fragment", 0);
         startActivity(intent);
         finish();
+    }
+
+    private boolean ValidateField(EditText editText) {
+        if(editText.equals(txt_orderQuantity)) {
+            if(editText.getText().toString().equals("")) {
+                editText.setBackgroundResource(R.drawable.error_border);
+                SetOnEdit(editText);
+                return false;
+            } else if (Integer.parseInt(editText.getText().toString()) == 0) {
+                Toast.makeText(AddOrderActivity.this, "Quantity cannot be less than 1!!!", Toast.LENGTH_SHORT).show();
+                editText.setBackgroundResource(R.drawable.error_border);
+                SetOnEdit(editText);
+                return false;
+            }
+        } else {
+            if(editText.getText().toString().length() < 3) {
+                editText.setBackgroundResource(R.drawable.error_border);
+                SetOnEdit(editText);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void SetOnEdit(EditText editText) {
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    editText.setBackgroundResource(R.drawable.primary_boarder);
+                }
+            }
+        });
     }
 }

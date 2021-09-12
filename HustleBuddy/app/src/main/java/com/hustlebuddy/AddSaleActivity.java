@@ -5,16 +5,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TableLayout;
@@ -23,16 +30,21 @@ import android.widget.Toast;
 
 import com.hustlebuddy.adapter.SaleProductAdapter;
 import com.hustlebuddy.controller.Service;
+import com.hustlebuddy.model.CreditSale;
 import com.hustlebuddy.model.DailyStock;
 import com.hustlebuddy.model.Product;
 import com.hustlebuddy.model.Sale;
 import com.hustlebuddy.model.TradingStock;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class AddSaleActivity extends AppCompatActivity {
@@ -53,6 +65,17 @@ public class AddSaleActivity extends AppCompatActivity {
     TextView txtTotal;
     Button btnAddSale;
 
+    // Popup
+    View view;
+    PopupWindow popupWindow;
+    EditText txtCustomerName;
+    EditText txtContactNumber;
+    EditText txtCreditAmount;
+    EditText txtDeposit;
+    EditText txtDueDate;
+    ImageView imgDueDate;
+    Button btnAddCredit;
+
     ArrayAdapter<String> cashOrCreditAdapter;
     ArrayAdapter<String> productNamesAdapter;
     SaleProductAdapter saleProductAdapter;
@@ -62,13 +85,14 @@ public class AddSaleActivity extends AppCompatActivity {
     List<TradingStock> tradingStockList = new ArrayList<>();
     List<String> productNamesList = new ArrayList<>();
     List<String> cashOrCreditList = Arrays.asList("Cash", "Credit");
-    String cashOrCredit = "Cash";
+    String cashOrCredit = "cash";
     DailyStock stock;
     int position;
     int vendorId;
-    int saleCount = 0;
+    //int saleCount = 0;
+    int dateYear, dateMonth, dateDay;
 
-    private final DecimalFormat decimalFormat = new DecimalFormat("#.##");
+    DecimalFormat decimalFormat = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.UK));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +117,17 @@ public class AddSaleActivity extends AppCompatActivity {
         txtTotal = findViewById(R.id.txt_addSaleTotal);
         btnAddSale = findViewById(R.id.btn_addSale);
 
+        // Popup
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        view = inflater.inflate(R.layout.layout_add_credit_details, null);
+        txtCustomerName = view.findViewById(R.id.txt_addCreditCustomerName);
+        txtContactNumber = view.findViewById(R.id.txt_addCreditContactNumber);
+        txtCreditAmount = view.findViewById(R.id.txt_addCreditAmount);
+        txtDeposit = view.findViewById(R.id.txt_addCreditDeposit);
+        txtDueDate = view.findViewById(R.id.txt_addCreditDueDate);
+        imgDueDate = view.findViewById(R.id.img_addCreditDueDate);
+        btnAddCredit = view.findViewById(R.id.btn_addCreditCreate);
+
         btnCreateProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,12 +150,6 @@ public class AddSaleActivity extends AppCompatActivity {
                         saleProductAdapter.getQuantityList().add(Integer.parseInt(txtQuantity.getText().toString()));
                         saleProductAdapter.getProductList().add(productList.get(position));
                         saleProductAdapter.notifyDataSetChanged();
-                        double total = 0;
-                        for(int i = 0; i < saleProductAdapter.getItemCount(); i++) {
-                            total += saleProductAdapter.getProductList().get(i).getSellingPrice() * saleProductAdapter.getQuantityList().get(i);
-                        }
-                        txtTotal.setText(("Total: R " + decimalFormat.format(total)));
-                        saleCount++;
                         tableAddProduct.setVisibility(View.GONE);
                         Toast.makeText(AddSaleActivity.this, "Product added...", Toast.LENGTH_SHORT).show();
                     } else {
@@ -128,6 +157,15 @@ public class AddSaleActivity extends AppCompatActivity {
                     }
                 } catch (Exception e) {
                     Toast.makeText(AddSaleActivity.this, "Quantity can not be empty!!!", Toast.LENGTH_SHORT).show();
+                    txtQuantity.setBackgroundResource(R.drawable.error_border);
+                    txtQuantity.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                        @Override
+                        public void onFocusChange(View v, boolean hasFocus) {
+                            if(hasFocus){
+                                v.setBackgroundResource(R.drawable.primary_boarder);
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -138,7 +176,7 @@ public class AddSaleActivity extends AppCompatActivity {
         spinnerCashOrCredit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                cashOrCredit = cashOrCreditList.get(position);
+                cashOrCredit = cashOrCreditList.get(position).toLowerCase();
             }
 
             @Override
@@ -182,6 +220,18 @@ public class AddSaleActivity extends AppCompatActivity {
         recyclerView.setAdapter(saleProductAdapter);
         RefreshSaleData();
 
+        saleProductAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                double total = 0;
+                for(int i = 0; i < saleProductAdapter.getItemCount(); i++) {
+                    total += saleProductAdapter.getProductList().get(i).getSellingPrice() * saleProductAdapter.getQuantityList().get(i);
+                }
+                txtTotal.setText(("Total: R " + decimalFormat.format(total)));
+            }
+        });
+
         btnAddSale.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -189,34 +239,110 @@ public class AddSaleActivity extends AppCompatActivity {
                     Toast.makeText(AddSaleActivity.this, "Not products selected!!!", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                for(int i = 0; i < saleProductAdapter.getItemCount(); i++) {
-                    Sale sale = new Sale(0, saleProductAdapter.getProductList().get(i).getProductCode(),
-                            saleProductAdapter.getQuantityList().get(i), stock.getLocation(), LocalDateTime.now(), vendorId);
-                    progressBar.setVisibility(View.VISIBLE);
-                    service.CreateSale(sale, stock.getStockId(), new Service.VolleyResponseListener() {
-                        @Override
-                        public void onError(String message) {
-                            Toast.makeText(AddSaleActivity.this, "Could not create sale!!!", Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onResponse(Object response) {
-                            saleCount--;
-                            if(saleCount == 0) {
-                                Toast.makeText(AddSaleActivity.this, "Sale added successfully...", Toast.LENGTH_SHORT).show();
-
-                                Intent intent = new Intent(AddSaleActivity.this, MainActivity.class);
-                                intent.putExtra("vendorId", vendorId);
-                                progressBar.setVisibility(View.GONE);
-                                startActivity(intent);
-                                finish();
-                            }
-                        }
-                    });
+                if(cashOrCredit.equalsIgnoreCase("credit")) {
+                    showPopupWindow(v);
+                    return;
                 }
+                createSale("cash");
             }
         });
+    }
+
+    private void createSale(String mode) {
+        int[] saleCount = {saleProductAdapter.getItemCount()};
+        for(int i = 0; i < saleProductAdapter.getItemCount(); i++) {
+            Sale sale = new Sale(0, saleProductAdapter.getProductList().get(i).getProductCode(),
+                    saleProductAdapter.getQuantityList().get(i), stock.getLocation(), LocalDateTime.now(), vendorId, mode);
+            progressBar.setVisibility(View.VISIBLE);
+            service.CreateSale(sale, stock.getStockId(), new Service.VolleyResponseListener() {
+                @Override
+                public void onError(String message) {
+                    Toast.makeText(AddSaleActivity.this, "Could not create sale!!!", Toast.LENGTH_SHORT).show();
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onResponse(Object response) {
+                    if(mode.equalsIgnoreCase("credit")) {
+                        service.GetRecentSale(vendorId, new Service.SaleListener() {
+                            @Override
+                            public void onResponse(Sale sale) {
+                                CreditSale creditSale = new CreditSale(0, sale.getSaleId(), vendorId, txtCustomerName.getText().toString(),
+                                        txtContactNumber.getText().toString(), Double.parseDouble(txtCreditAmount.getText().toString()),
+                                        Double.parseDouble(txtDeposit.getText().toString()), LocalDateTime.parse(txtDueDate.getText().toString() + " 00:00",
+                                        DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), LocalDateTime.now(), LocalDateTime.now(), "unpaid");
+                                service.CreateCreditSale(creditSale, new Service.VolleyResponseListener() {
+                                    @Override
+                                    public void onError(String message) {
+                                        Toast.makeText(AddSaleActivity.this, "Could not create credit sale!!!", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onResponse(Object response) {
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onError(String message) {
+                                Toast.makeText(AddSaleActivity.this, "Could not get recent sale!!!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                    saleCount[0]--;
+                    if(saleCount[0] == 0) {
+                        Toast.makeText(AddSaleActivity.this, "Sale added successfully...", Toast.LENGTH_SHORT).show();
+
+                        Intent intent = new Intent(AddSaleActivity.this, MainActivity.class);
+                        intent.putExtra("vendorId", vendorId);
+                        progressBar.setVisibility(View.GONE);
+                        startActivity(intent);
+                        finish();
+                    }
+                }
+            });
+        }
+    }
+
+    private void showPopupWindow(View v) {
+
+        imgDueDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                dateYear = calendar.get(Calendar.YEAR);
+                dateMonth = calendar.get(Calendar.MONTH);
+                dateDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(AddSaleActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                if(month < 10 && dayOfMonth < 10) {
+                                    txtDueDate.setText(year + "-0" + (month + 1) + "-0" + dayOfMonth);
+                                } else if(month < 10) {
+                                    txtDueDate.setText(year + "-0" + (month + 1) + "-" + dayOfMonth);
+                                } else if(dayOfMonth < 10) {
+                                    txtDueDate.setText(year + "-" + (month + 1) + "-0" + dayOfMonth);
+                                } else {
+                                    txtDueDate.setText(year + "-" + (month + 1) + "-" + dayOfMonth);
+                                }
+                            }
+                        }, dateYear, dateMonth, dateDay);
+                datePickerDialog.show();
+            }
+        });
+
+        btnAddCredit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                createSale("credit");
+                popupWindow.dismiss();
+            }
+        });
+
+        popupWindow = new PopupWindow(view, v.getWidth() - 80, 530, true);
+        popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
     }
 
     @Override

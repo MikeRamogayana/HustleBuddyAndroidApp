@@ -1,14 +1,23 @@
 package com.hustlebuddy;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,22 +30,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.hustlebuddy.adapter.SaleProductAdapter;
 import com.hustlebuddy.controller.Service;
+import com.hustlebuddy.model.CreditSale;
 import com.hustlebuddy.model.Product;
 import com.hustlebuddy.model.Sale;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
-
-import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener;
-import lecho.lib.hellocharts.model.Axis;
-import lecho.lib.hellocharts.model.AxisValue;
-import lecho.lib.hellocharts.model.Column;
-import lecho.lib.hellocharts.model.ColumnChartData;
-import lecho.lib.hellocharts.model.SubcolumnValue;
-import lecho.lib.hellocharts.util.ChartUtils;
-import lecho.lib.hellocharts.view.ColumnChartView;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class SaleFragment extends Fragment {
@@ -46,19 +50,29 @@ public class SaleFragment extends Fragment {
 
     ProgressBar progressBar;
     Button btnCreateSale;
+    Spinner spinnerCashOrCredit;
+    EditText txtSaleDate;
+    ImageView imgSaleDateReset;
+    ImageView imgSaleDate;
+    EditText txtSaleSearch;
+    ImageView imgSaleSearch;
     RecyclerView recyclerView;
     LinearLayoutManager linearLayoutManager;
     SaleProductAdapter saleProductAdapter;
     FloatingActionButton btnSaleRefresh;
+    TextView txtSaleCash;
+    TextView txtSaleCredit;
+
+    ArrayAdapter<String> cashOrCreditAdapter;
 
     List<Sale> saleList = new ArrayList<>();
+    List<String> cashOrCreditList = Arrays.asList("All", "Cash", "Credit");
 
-    ColumnChartView barGraph;
-    ColumnChartData columnChartData;
-
-    int vendorId;
+    int vendorId, dateDay, dateYear, dateMonth;
     boolean inflated = false;
+    String strDate;
     Context context;
+    int position = 0;
 
     public SaleFragment(Context context, int vendorId) {
         this.context = context;
@@ -76,8 +90,13 @@ public class SaleFragment extends Fragment {
         progressBar = view.findViewById(R.id.progress_sale);
         btnSaleRefresh = view.findViewById(R.id.btn_recentSaleRefresh);
         btnCreateSale = view.findViewById(R.id.btn_createSale);
-        barGraph = view.findViewById(R.id.chart_saleBarGraph);
+        spinnerCashOrCredit = view.findViewById(R.id.spn_searchProductExpenseCode);
+        txtSaleDate = view.findViewById(R.id.txt_viewSaleDate);
+        imgSaleDateReset = view.findViewById(R.id.img_viewSaleDateReset);
+        imgSaleDate = view.findViewById(R.id.img_viewSaleDate);
         recyclerView = view.findViewById(R.id.recycler_recentSales);
+        txtSaleCash = view.findViewById(R.id.txt_viewSaleCash);
+        txtSaleCredit = view.findViewById(R.id.txt_viewSaleCredit);
 
         btnSaleRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,15 +116,65 @@ public class SaleFragment extends Fragment {
             }
         });
 
-        barGraph.setOnValueTouchListener(new ColumnChartOnValueSelectListener() {
-            @Override
-            public void onValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
+        cashOrCreditAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, cashOrCreditList);
+        cashOrCreditAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCashOrCredit.setAdapter(cashOrCreditAdapter);
 
+        spinnerCashOrCredit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(cashOrCreditList.get(position).equalsIgnoreCase("cash")) {
+                    txtSaleCash.setBackgroundColor(Color.parseColor("#9987FA00"));
+                    txtSaleCredit.setBackgroundColor(0);
+                } else if (cashOrCreditList.get(position).equalsIgnoreCase("credit")) {
+                    txtSaleCash.setBackgroundColor(0);
+                    txtSaleCredit.setBackgroundColor(Color.parseColor("#9973D7FF"));
+                } else {
+                    txtSaleCash.setBackgroundColor(Color.parseColor("#9987FA00"));
+                    txtSaleCredit.setBackgroundColor(Color.parseColor("#9973D7FF"));
+                }
+                SaleFragment.this.position = position;
+                DisplayByCashOrCredit();
             }
 
             @Override
-            public void onValueDeselected() {
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
+        imgSaleDateReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                txtSaleDate.setText("");
+                RefreshSaleData();
+            }
+        });
+
+        imgSaleDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                dateYear = calendar.get(Calendar.YEAR);
+                dateMonth = calendar.get(Calendar.MONTH);
+                dateDay = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                if(month < 10 && dayOfMonth < 10) {
+                                    strDate = year + "-0" + (month + 1) + "-0" + dayOfMonth;
+                                } else if(month < 10) {
+                                    strDate = year + "-0" + (month + 1) + "-" + dayOfMonth;
+                                } else if(dayOfMonth < 10) {
+                                    strDate = year + "-" + (month + 1) + "-0" + dayOfMonth;
+                                } else {
+                                    strDate = year + "-" + (month + 1) + "-" + dayOfMonth;
+                                }
+                                txtSaleDate.setText(strDate + " 00:00");
+                                RefreshSaleDataByDate();
+                            }
+                        }, dateYear, dateMonth, dateDay);
+                datePickerDialog.show();
             }
         });
 
@@ -113,6 +182,7 @@ public class SaleFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         saleProductAdapter = new SaleProductAdapter();
         recyclerView.setAdapter(saleProductAdapter);
+        saleProductAdapter.setSaleFragment(this);
 
         if(!inflated) {
             RefreshSaleData();
@@ -122,41 +192,85 @@ public class SaleFragment extends Fragment {
         return view;
     }
 
-    private void RefreshSaleData() {
+    private void DisplayByCashOrCredit() {
+        saleProductAdapter.getProductList().clear();
+        saleProductAdapter.getQuantityList().clear();
+        saleProductAdapter.getDateList().clear();
+        saleProductAdapter.getCreditSaleList().clear();
+
+        if(saleList.size() == 0) {
+            saleProductAdapter.notifyDataSetChanged();
+            progressBar.setVisibility(View.GONE);
+            return;
+        }
+
+        progressBar.setVisibility(View.VISIBLE);
+        for (Sale sale: saleList) {
+            if(!cashOrCreditList.get(position).equalsIgnoreCase("all")) {
+                if(!sale.getCashOrCredit().equalsIgnoreCase(cashOrCreditList.get(position))) {
+                    saleProductAdapter.notifyDataSetChanged();
+                    continue;
+                }
+            }
+            service.GetProductByProductCode(sale.getProductCode(), new com.hustlebuddy.controller.Service.ProductListener() {
+                @Override
+                public void onResponse(Product product) {
+                    if(sale.getCashOrCredit().equalsIgnoreCase("credit")) {
+                        service.GetCreditSaleBySaleId(sale.getSaleId(), new Service.CreditSaleListener() {
+                            @Override
+                            public void onResponse(CreditSale creditSale) {
+                                saleProductAdapter.getProductList().add(product);
+                                saleProductAdapter.getQuantityList().add(sale.getQuantity());
+                                saleProductAdapter.getDateList().add(sale.getDate());
+                                saleProductAdapter.getCreditSaleList().add(creditSale);
+                                saleProductAdapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onError(String message) {
+
+                            }
+                        });
+                    } else {
+                        saleProductAdapter.getProductList().add(product);
+                        saleProductAdapter.getQuantityList().add(sale.getQuantity());
+                        saleProductAdapter.getDateList().add(sale.getDate());
+                        saleProductAdapter.getCreditSaleList().add(null);
+                        saleProductAdapter.notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onError(String message) {
+                    Toast.makeText(view.getContext(), "Could not load product sales!!!", Toast.LENGTH_SHORT).show();
+                    btnSaleRefresh.setVisibility(View.VISIBLE);
+                }
+            });
+        }
+        progressBar.setVisibility(View.GONE);
+
+    }
+
+    public void RefreshSaleData() {
         progressBar.setVisibility(View.VISIBLE);
         service.GetDailySales(vendorId, new Service.SalesListener() {
             @Override
             public void onResponse(ArrayList<Sale> sales) {
+
                 saleProductAdapter.getProductList().clear();
                 saleProductAdapter.getQuantityList().clear();
                 saleProductAdapter.getDateList().clear();
+                saleProductAdapter.getCreditSaleList().clear();
                 saleList.clear();
                 saleList.addAll(sales);
-                sales.sort(new Comparator<Sale>() {
+                saleList.sort(new Comparator<Sale>() {
                     @Override
                     public int compare(Sale o1, Sale o2) {
                         return o2.getDate().compareTo(o1.getDate());
                     }
                 });
-                for (Sale sale: sales) {
-                    service.GetProductByProductCode(sale.getProductCode(), new com.hustlebuddy.controller.Service.ProductListener() {
-                        @Override
-                        public void onResponse(Product product) {
-                            saleProductAdapter.getProductList().add(product);
-                            saleProductAdapter.getQuantityList().add(sale.getQuantity());
-                            saleProductAdapter.getDateList().add(sale.getDate());
-                            saleProductAdapter.notifyDataSetChanged();
-                        }
 
-                        @Override
-                        public void onError(String message) {
-                            Toast.makeText(view.getContext(), "Could not load product sales!!!", Toast.LENGTH_SHORT).show();
-                            btnSaleRefresh.setVisibility(View.VISIBLE);
-                        }
-                    });
-                }
-                progressBar.setVisibility(View.GONE);
-                DrawBarChart(saleList);
+                DisplayByCashOrCredit();
             }
 
             @Override
@@ -168,68 +282,34 @@ public class SaleFragment extends Fragment {
         });
     }
 
-    private void DrawBarChart(List<Sale> sales) {
+    public void RefreshSaleDataByDate() {
+        progressBar.setVisibility(View.VISIBLE);
+        service.GetSalesByDate(vendorId, LocalDateTime.parse(txtSaleDate.getText().toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")), new Service.SalesListener() {
+            @Override
+            public void onResponse(ArrayList<Sale> sales) {
 
-        if(!sales.isEmpty()) {
+                saleProductAdapter.getProductList().clear();
+                saleProductAdapter.getQuantityList().clear();
+                saleProductAdapter.getDateList().clear();
+                saleProductAdapter.getCreditSaleList().clear();
+                saleList.clear();
+                saleList.addAll(sales);
+                saleList.sort(new Comparator<Sale>() {
+                    @Override
+                    public int compare(Sale o1, Sale o2) {
+                        return o2.getDate().compareTo(o1.getDate());
+                    }
+                });
 
-            sales.sort(new Comparator<Sale>() {
-                @Override
-                public int compare(Sale o1, Sale o2) {
-                    return o1.getProductCode().compareTo(o2.getProductCode());
-                }
-            });
-
-            List<String> xAxisData = new ArrayList<>();
-            List<Integer> yAxisData = new ArrayList<>();
-
-            int total = 0;
-            int i;
-            for(i = 0; i < sales.size() - 1; i++) {
-                if(sales.get(i).getProductCode().equals(sales.get(i + 1).getProductCode())) {
-                    total += sales.get(i).getQuantity();
-                } else {
-                    xAxisData.add(sales.get(i).getProductCode());
-                    yAxisData.add(total + sales.get(i).getQuantity());
-                    total = 0;
-                }
-            }
-            total += sales.get(i).getQuantity();
-            if(xAxisData.contains(sales.get(i).getProductCode())) {
-                yAxisData.set(yAxisData.size() - 1, total);
-            } else {
-                xAxisData.add(sales.get(i).getProductCode());
-                yAxisData.add(total);
-            }
-            
-            List<Column> columns = new ArrayList<>();
-            List<SubcolumnValue> values = new ArrayList<>();
-            List<AxisValue> axisValues = new ArrayList<>();
-
-            for(i = 0; i < xAxisData.size(); i++) {
-                axisValues.add(new AxisValue(i).setLabel(xAxisData.get(i)));
-
-                SubcolumnValue subcolumnValue = new SubcolumnValue(yAxisData.get(i), ChartUtils.pickColor());
-                subcolumnValue.setLabel(String.valueOf(yAxisData.get(i)));
-                values.add(subcolumnValue);
-
-                Column column = new Column(Arrays.asList(subcolumnValue));
-                column.setHasLabelsOnlyForSelected(true);
-                columns.add(column);
+                DisplayByCashOrCredit();
             }
 
-            columnChartData = new ColumnChartData(columns);
-            Axis xAxis = new Axis();
-            xAxis.setValues(axisValues);
-            Axis yAxis = new Axis().setHasLines(true);
-
-            xAxis.setName("Products");
-            yAxis.setName("Sales");
-            columnChartData.setAxisXBottom(xAxis);
-            columnChartData.setAxisYLeft(yAxis);
-
-            barGraph.setVisibility(View.VISIBLE);
-            barGraph.setColumnChartData(columnChartData);
-            columnChartData.finish();
-        }
+            @Override
+            public void onError(String message) {
+                Toast.makeText(view.getContext(), "Could not load recent sales!!!", Toast.LENGTH_SHORT).show();
+                btnSaleRefresh.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.GONE);
+            }
+        });
     }
 }

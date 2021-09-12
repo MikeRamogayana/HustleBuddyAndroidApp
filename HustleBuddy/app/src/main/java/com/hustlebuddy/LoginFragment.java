@@ -3,6 +3,7 @@ package com.hustlebuddy;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -87,33 +88,32 @@ public class LoginFragment extends Fragment {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    email = txtEmail.getText().toString();
-                    password = txtPassword.getText().toString();
-                    progressBar.setVisibility(View.VISIBLE);
-                    service.Login(email, password, new Service.VendorResponseListener() {
-                        @Override
-                        public void onResponse(Vendor vendor) {
-                            LoginFragment.this.vendor = vendor;
-                            Toast.makeText(context, "Logged in successfully...", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(view.getContext(), MainActivity.class);
-                            intent.putExtra("vendorId", vendor.getVendorId());
-                            intent.putExtra("title", vendor.getCompanyName());
-                            startActivity(intent);
-                            progressBar.setVisibility(View.GONE);
-                            getActivity().finish();
-                        }
-
-                        @Override
-                        public void onError(String message) {
-                            Toast.makeText(context, "Login failed check your fields!!!", Toast.LENGTH_SHORT).show();
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-                } catch (Exception e) {
-                    Toast.makeText(context, "Login form invalid, check your fields!!!", Toast.LENGTH_SHORT).show();
-                    progressBar.setVisibility(View.GONE);
+                if(!(ValidateField(txtEmail) && ValidateField(txtPassword))) {
+                    Toast.makeText(context, "Check fields highlighted in red!!!", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                email = txtEmail.getText().toString();
+                password = txtPassword.getText().toString();
+                progressBar.setVisibility(View.VISIBLE);
+                service.Login(email, password, new Service.VendorResponseListener() {
+                    @Override
+                    public void onResponse(Vendor vendor) {
+                        LoginFragment.this.vendor = vendor;
+                        Toast.makeText(context, "Logged in successfully...", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(view.getContext(), MainActivity.class);
+                        intent.putExtra("vendorId", vendor.getVendorId());
+                        intent.putExtra("title", vendor.getCompanyName());
+                        startActivity(intent);
+                        progressBar.setVisibility(View.GONE);
+                        getActivity().finish();
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        Toast.makeText(context, "Login failed check your fields!!!", Toast.LENGTH_SHORT).show();
+                        progressBar.setVisibility(View.GONE);
+                    }
+                });
             }
         });
 
@@ -131,7 +131,7 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 try {
                     code = GenerateCode();
-                    if(txtResetEmail.getText().toString().contains("@")) {
+                    if(ValidateField(txtConfirmPassword) && txtResetEmail.getText().toString().contains("@")) {
                         email = txtResetEmail.getText().toString();
                         EmailMessage emailMessage = new EmailMessage(email, "Password Reset Code", String.valueOf(code));
                         progressBar.setVisibility(View.VISIBLE);
@@ -216,33 +216,33 @@ public class LoginFragment extends Fragment {
         return false;
     }
 
-    private boolean ValidateField(TextView textView) {
-        if(textView.getText().toString().length() < 5) {
-            textView.setBackgroundColor(Color.parseColor("#22FF0000"));
-            SetOnEdit(textView);
+    private boolean ValidateField(EditText editText) {
+        if(editText.getText().toString().length() < 5) {
+            editText.setBackgroundResource(R.drawable.error_border);
+            SetOnEdit(editText);
             return false;
         }
-        if(textView == txtConfirmPassword && !textView.getText().toString().equals(txtNewPassword.getText().toString())) {
-            textView.setBackgroundColor(Color.parseColor("#22FF0000"));
-            SetOnEdit(textView);
+        if(editText == txtConfirmPassword && !editText.getText().toString().equals(txtNewPassword.getText().toString())) {
+            editText.setBackgroundResource(R.drawable.error_border);
+            SetOnEdit(editText);
             Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(textView == txtResetCode && Integer.parseInt(textView.getText().toString()) != code) {
-            textView.setBackgroundColor(Color.parseColor("#22FF0000"));
-            SetOnEdit(textView);
+        if(editText == txtResetCode && Integer.parseInt(editText.getText().toString()) != code) {
+            editText.setBackgroundResource(R.drawable.error_border);
+            SetOnEdit(editText);
             Toast.makeText(context, "Invalid reset code entered!!!", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
     }
 
-    private void SetOnEdit(TextView textView) {
-        textView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+    private void SetOnEdit(EditText editText) {
+        editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus){
-                    v.setBackgroundColor(0);
+                    editText.setBackgroundResource(R.drawable.primary_boarder);
                 }
             }
         });

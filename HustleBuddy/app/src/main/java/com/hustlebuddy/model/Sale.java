@@ -17,14 +17,16 @@ public class Sale implements Comparable<Sale> {
     private String location;
     private LocalDateTime date;
     private int vendorId;
+    private String cashOrCredit;
 
-    public Sale(int saleId, String productCode, int quantity, String location, LocalDateTime date, int vendorId) {
+    public Sale(int saleId, String productCode, int quantity, String location, LocalDateTime date, int vendorId, String cashOrCredit) {
         this.saleId = saleId;
         this.productCode = productCode;
         this.quantity = quantity;
         this.location = location;
         this.date = date;
         this.vendorId = vendorId;
+        this.cashOrCredit = cashOrCredit;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -35,6 +37,7 @@ public class Sale implements Comparable<Sale> {
         this.setLocation(jsonObject.getString("location"));
         this.setDate(LocalDateTime.parse(jsonObject.getString("date")));
         this.setVendorId(jsonObject.getInt("vendorId"));
+        this.setCashOrCredit(jsonObject.getString("cashOrCredit"));
     }
 
     public Sale() {
@@ -48,6 +51,7 @@ public class Sale implements Comparable<Sale> {
         jsonObject.put("location", sale.getLocation());
         jsonObject.put("date", sale.getDate());
         jsonObject.put("vendorId",sale.getVendorId());
+        jsonObject.put("cashOrCredit", sale.getCashOrCredit());
         return jsonObject;
     }
 
@@ -97,6 +101,14 @@ public class Sale implements Comparable<Sale> {
 
     public void setVendorId(int vendorId) {
         this.vendorId = vendorId;
+    }
+
+    public String getCashOrCredit() {
+        return cashOrCredit;
+    }
+
+    public  void setCashOrCredit(String cashOrCredit) {
+        this.cashOrCredit = cashOrCredit;
     }
 
     @Override

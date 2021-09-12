@@ -26,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     SaleFragment saleFragment;
     OrderFragment orderFragment;
     ExpenseFragment expenseFragment;
-
     TabLayout tabLayout;
     ViewPager viewPager;
     TextView textTitle;
@@ -77,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout.getTabAt(0).setIcon(R.drawable.ic_baseline_access_alarm_24);
         tabLayout.getTabAt(1).setIcon(R.drawable.ic_baseline_point_of_sale_24);
-        tabLayout.getTabAt(2).setIcon(R.drawable.ic_baseline_attach_money_24);
+        tabLayout.getTabAt(2).setIcon(R.drawable.ic_baseline_money_off_24);
 
     }
 
